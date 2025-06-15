@@ -14,8 +14,16 @@ export const useScrollAnimation = (options: ScrollAnimationOptions = {}) => {
     triggerOnce = true
   } = options;
 
+  const observerRef = useRef<IntersectionObserver | null>(null);
+
   useEffect(() => {
-    const observer = new IntersectionObserver(
+    // Clean up previous observer
+    if (observerRef.current) {
+      observerRef.current.disconnect();
+    }
+
+    // Create new observer
+    observerRef.current = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
           const element = entry.target as HTMLElement;
@@ -23,7 +31,6 @@ export const useScrollAnimation = (options: ScrollAnimationOptions = {}) => {
           if (entry.isIntersecting) {
             // Add animation classes
             element.classList.add('animate-in');
-            element.style.animationFillMode = 'both';
             
             // Add staggered delay for sibling elements
             const parent = element.parentElement;
@@ -33,6 +40,11 @@ export const useScrollAnimation = (options: ScrollAnimationOptions = {}) => {
               );
               const index = siblings.indexOf(element);
               element.style.animationDelay = `${index * 0.1}s`;
+            }
+
+            // If triggerOnce is true, stop observing this element
+            if (triggerOnce) {
+              observerRef.current?.unobserve(element);
             }
           } else if (!triggerOnce) {
             element.classList.remove('animate-in');
@@ -46,14 +58,35 @@ export const useScrollAnimation = (options: ScrollAnimationOptions = {}) => {
       }
     );
 
-    // Observe all elements with scroll-animate class
-    const elements = document.querySelectorAll('.scroll-animate');
-    elements.forEach((el) => observer.observe(el));
+    // Function to observe elements
+    const observeElements = () => {
+      const elements = document.querySelectorAll('.scroll-animate');
+      console.log('Found scroll-animate elements:', elements.length);
+      elements.forEach((el) => {
+        console.log('Observing element:', el.className);
+        observerRef.current?.observe(el);
+      });
+    };
+
+    // Initial observation
+    observeElements();
+
+    // Set up a mutation observer to catch dynamically added elements
+    const mutationObserver = new MutationObserver(() => {
+      // Small delay to ensure DOM is updated
+      setTimeout(observeElements, 100);
+    });
+
+    mutationObserver.observe(document.body, {
+      childList: true,
+      subtree: true,
+    });
 
     return () => {
-      observer.disconnect();
+      observerRef.current?.disconnect();
+      mutationObserver.disconnect();
     };
   }, [threshold, rootMargin, triggerOnce]);
 
-  return useRef(null);
+  return observerRef;
 };
