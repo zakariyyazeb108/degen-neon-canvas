@@ -25,11 +25,11 @@ const Services = () => {
   ];
 
   return (
-    <section id="services" className="py-20 bg-background">
+    <section id="services" className="py-20 bg-background relative">
       <div className="container mx-auto px-6">
-        <div className="text-center mb-16 reveal">
+        <div className="text-center mb-16 reveal-scale">
           <h2 className="text-4xl md:text-5xl font-bold mb-6">
-            What I <span className="text-transparent bg-clip-text bg-gradient-to-r from-neon-purple to-neon-pink">Create</span>
+            What I <span className="gradient-text">Create</span>
           </h2>
           <p className="text-xl text-gray-400 max-w-2xl mx-auto">
             Specialized services tailored for modern digital needs
@@ -40,7 +40,8 @@ const Services = () => {
           {services.map((service, index) => (
             <Card 
               key={service.title}
-              className="bg-card border-border hover:border-neon-purple/50 transition-all duration-300 transform hover:scale-105 hover:shadow-2xl group reveal"
+              className="bg-card/80 backdrop-blur-sm border-border hover:border-neon-purple/50 transition-all duration-500 transform hover:scale-105 hover:shadow-2xl group reveal-up tilt glass shimmer"
+              data-animation="slide-up"
               style={{ animationDelay: `${index * 0.2}s` }}
             >
               <div className="p-6 space-y-4">
@@ -48,15 +49,15 @@ const Services = () => {
                   <img 
                     src={service.image} 
                     alt={service.title}
-                    className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-110"
+                    className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
                   />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
-                  <div className="absolute bottom-4 left-4 p-3 bg-neon-purple/20 rounded-full backdrop-blur-sm">
-                    <service.icon className="w-6 h-6 text-neon-purple" />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent"></div>
+                  <div className="absolute bottom-4 left-4 p-3 bg-gradient-to-r from-neon-purple/30 to-neon-pink/30 rounded-full backdrop-blur-sm glass neon-glow">
+                    <service.icon className="w-6 h-6 text-white" />
                   </div>
                 </div>
                 
-                <h3 className="text-2xl font-semibold text-white group-hover:text-neon-purple transition-colors">
+                <h3 className="text-2xl font-semibold text-white group-hover:text-transparent group-hover:bg-clip-text group-hover:bg-gradient-to-r group-hover:from-neon-purple group-hover:to-neon-pink transition-all duration-300">
                   {service.title}
                 </h3>
                 <p className="text-gray-400 leading-relaxed">
