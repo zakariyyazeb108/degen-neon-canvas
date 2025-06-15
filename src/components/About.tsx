@@ -21,7 +21,7 @@ const About = () => {
       <div className="container mx-auto px-6">
         <div className="max-w-7xl mx-auto">
           {/* Header */}
-          <div className="text-center mb-20 scroll-animate fade-up">
+          <div className="text-center mb-20">
             <h2 className="text-5xl md:text-6xl font-light mb-8 text-balance">
               About <span className="gradient-text font-medium">Degen</span>
             </h2>
@@ -32,7 +32,7 @@ const About = () => {
 
           <div className="grid lg:grid-cols-2 gap-16 items-center mb-20">
             {/* Content */}
-            <div className="space-y-8 scroll-animate fade-left">
+            <div className="space-y-8">
               <div className="space-y-6 text-lg text-gray-300 leading-relaxed">
                 <p>
                   I'm a self-taught visual designer with <span className="text-blue-400 font-medium">3+ years of experience</span> crafting 
@@ -54,7 +54,7 @@ const About = () => {
               {/* Stats */}
               <div className="grid grid-cols-2 md:grid-cols-4 gap-8 pt-8">
                 {stats.map((stat, index) => (
-                  <div key={stat.label} className="text-center scroll-animate scale-up">
+                  <div key={stat.label} className="text-center">
                     <div className="text-3xl font-bold gradient-text mb-2">{stat.number}</div>
                     <div className="text-white/60 text-sm font-light">{stat.label}</div>
                   </div>
@@ -63,7 +63,7 @@ const About = () => {
             </div>
             
             {/* Skills */}
-            <div className="scroll-animate fade-right">
+            <div>
               <div className="premium-card p-8">
                 <h3 className="text-2xl font-medium text-white mb-8">Skills & Expertise</h3>
                 <div className="space-y-6">
@@ -90,7 +90,7 @@ const About = () => {
           </div>
 
           {/* Philosophy */}
-          <div className="text-center scroll-animate fade-up">
+          <div className="text-center">
             <div className="max-w-4xl mx-auto premium-card p-12">
               <h3 className="text-3xl font-medium gradient-text mb-6">Design Philosophy</h3>
               <p className="text-xl text-white/70 leading-relaxed font-light">

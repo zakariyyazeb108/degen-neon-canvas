@@ -54,7 +54,7 @@ const Contact = () => {
       <div className="container mx-auto px-6 relative z-10">
         <div className="max-w-6xl mx-auto">
           {/* Header */}
-          <div className="text-center mb-20 scroll-animate fade-up">
+          <div className="text-center mb-20">
             <h2 className="text-5xl md:text-6xl font-light mb-8 text-balance">
               Let's Create <span className="gradient-text font-medium">Together</span>
             </h2>
@@ -65,7 +65,7 @@ const Contact = () => {
 
           <div className="grid lg:grid-cols-2 gap-16 mb-20">
             {/* Contact Methods */}
-            <div className="space-y-8 scroll-animate fade-left">
+            <div className="space-y-8">
               <div>
                 <h3 className="text-2xl font-medium text-white mb-6">Get in Touch</h3>
                 <p className="text-white/60 leading-relaxed mb-8">
@@ -76,7 +76,7 @@ const Contact = () => {
 
               <div className="space-y-4">
                 {contactMethods.map((method, index) => (
-                  <Card key={method.title} className="premium-card p-6 group cursor-pointer hover:border-blue-400/30 scroll-animate fade-up">
+                  <Card key={method.title} className="premium-card p-6 group cursor-pointer hover:border-blue-400/30">
                     <div className="flex items-center space-x-4">
                       <div className="p-3 rounded-xl bg-gradient-to-br from-blue-500/10 to-blue-400/5 border border-blue-400/20">
                         <method.icon className="w-6 h-6 text-blue-400" />
@@ -98,12 +98,12 @@ const Contact = () => {
 
               {/* Quick Info */}
               <div className="grid grid-cols-2 gap-4">
-                <Card className="premium-card p-4 text-center scroll-animate scale-up">
+                <Card className="premium-card p-4 text-center">
                   <Clock className="w-6 h-6 text-blue-400 mx-auto mb-2" />
                   <p className="text-white/80 font-medium">Response Time</p>
                   <p className="text-white/50 text-sm">Under 24 hours</p>
                 </Card>
-                <Card className="premium-card p-4 text-center scroll-animate scale-up">
+                <Card className="premium-card p-4 text-center">
                   <DollarSign className="w-6 h-6 text-blue-400 mx-auto mb-2" />
                   <p className="text-white/80 font-medium">Starting From</p>
                   <p className="text-white/50 text-sm">$150</p>
@@ -112,11 +112,11 @@ const Contact = () => {
             </div>
 
             {/* Process */}
-            <div className="scroll-animate fade-right">
+            <div>
               <h3 className="text-2xl font-medium text-white mb-8">How We Work</h3>
               <div className="space-y-6">
                 {processSteps.map((step, index) => (
-                  <div key={step.step} className="flex space-x-4 group scroll-animate fade-up">
+                  <div key={step.step} className="flex space-x-4 group">
                     <div className="flex-shrink-0">
                       <div className="w-12 h-12 rounded-full bg-gradient-to-br from-blue-500/20 to-blue-400/10 border border-blue-400/30 flex items-center justify-center">
                         <span className="text-blue-400 font-bold text-sm">{step.step}</span>
@@ -137,7 +137,7 @@ const Contact = () => {
           </div>
 
           {/* CTA */}
-          <div className="text-center scroll-animate fade-up">
+          <div className="text-center">
             <Card className="premium-card p-12 max-w-3xl mx-auto">
               <h3 className="text-3xl font-medium gradient-text mb-4">Ready to Start?</h3>
               <p className="text-white/60 text-lg mb-8 leading-relaxed">
