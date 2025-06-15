@@ -4,7 +4,7 @@ import FloatingElements from "./FloatingElements";
 
 const Hero = () => {
   return (
-    <section className="min-h-screen flex items-center justify-center relative overflow-hidden hero-gradient">
+    <section id="home" className="min-h-screen flex items-center justify-center relative overflow-hidden hero-gradient">
       <FloatingElements />
       
       {/* Geometric background */}

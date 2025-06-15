@@ -1,5 +1,6 @@
 
 import { useEffect } from "react";
+import Navigation from "@/components/Navigation";
 import Hero from "@/components/Hero";
 import Services from "@/components/Services";
 import Portfolio from "@/components/Portfolio";
@@ -17,6 +18,7 @@ const Index = () => {
     <div className="min-h-screen bg-background text-foreground overflow-x-hidden relative">
       <ParticleBackground />
       <CustomCursor />
+      <Navigation />
       <Hero />
       <Services />
       <Portfolio />
