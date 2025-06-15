@@ -1,7 +1,7 @@
 
 import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
-import { circle-arrow-up } from "lucide-react";
+import { CircleArrowUp } from "lucide-react";
 
 const ScrollToTop = () => {
   const [isVisible, setIsVisible] = useState(false);
@@ -35,7 +35,7 @@ const ScrollToTop = () => {
         size="icon"
         className="bg-neon-purple hover:bg-neon-pink text-white rounded-full p-3 shadow-lg neon-glow transition-all duration-300 transform hover:scale-110"
       >
-        <circle-arrow-up className="w-6 h-6" />
+        <CircleArrowUp className="w-6 h-6" />
       </Button>
     </div>
   );
