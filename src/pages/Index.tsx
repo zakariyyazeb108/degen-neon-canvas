@@ -9,10 +9,10 @@ import Contact from "@/components/Contact";
 import ScrollToTop from "@/components/ScrollToTop";
 import ParticleBackground from "@/components/ParticleBackground";
 import CustomCursor from "@/components/CustomCursor";
-import { useAdvancedScrollReveal } from "@/hooks/useAdvancedScrollReveal";
+import { useScrollAnimation } from "@/hooks/useScrollAnimation";
 
 const Index = () => {
-  useAdvancedScrollReveal();
+  useScrollAnimation();
 
   return (
     <div className="min-h-screen bg-background text-foreground overflow-x-hidden relative">

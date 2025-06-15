@@ -37,7 +37,7 @@ const Services = () => {
   return (
     <section id="services" className="py-32 premium-gradient relative">
       <div className="container mx-auto px-6">
-        <div className="text-center mb-24 reveal-scale">
+        <div className="text-center mb-24 scroll-animate fade-up">
           <h2 className="text-5xl md:text-6xl font-light mb-8 text-balance">
             What I <span className="gradient-text font-medium">Create</span>
           </h2>
@@ -50,8 +50,7 @@ const Services = () => {
           {services.map((service, index) => (
             <div
               key={service.title}
-              className="reveal-up"
-              style={{ animationDelay: `${index * 0.15}s` }}
+              className="scroll-animate fade-up"
             >
               <Card className="premium-card p-8 h-full group">
                 <div className="space-y-6">

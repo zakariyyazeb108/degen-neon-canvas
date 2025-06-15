@@ -67,40 +67,53 @@
   will-change: transform;
 }
 
-/* Advanced reveal animations */
-.reveal {
+/* Apple-style scroll animations */
+.scroll-animate {
+  opacity: 0;
+  transform: translateY(40px);
+  transition: all 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+.scroll-animate.fade-up {
   opacity: 0;
   transform: translateY(60px);
-  transition: all 1.2s cubic-bezier(0.165, 0.84, 0.44, 1);
+  transition: all 1s cubic-bezier(0.25, 0.46, 0.45, 0.94);
 }
 
-.reveal-up {
+.scroll-animate.fade-down {
   opacity: 0;
   transform: translateY(-40px);
-  transition: all 1s cubic-bezier(0.165, 0.84, 0.44, 1);
+  transition: all 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
 }
 
-.reveal-scale {
-  opacity: 0;
-  transform: scale(0.9);
-  transition: all 1s cubic-bezier(0.165, 0.84, 0.44, 1);
-}
-
-.reveal-left {
+.scroll-animate.fade-left {
   opacity: 0;
   transform: translateX(-60px);
-  transition: all 1s cubic-bezier(0.165, 0.84, 0.44, 1);
+  transition: all 0.9s cubic-bezier(0.25, 0.46, 0.45, 0.94);
 }
 
-.reveal-right {
+.scroll-animate.fade-right {
   opacity: 0;
   transform: translateX(60px);
-  transition: all 1s cubic-bezier(0.165, 0.84, 0.44, 1);
+  transition: all 0.9s cubic-bezier(0.25, 0.46, 0.45, 0.94);
 }
 
-.animate-in {
+.scroll-animate.scale-up {
+  opacity: 0;
+  transform: scale(0.8);
+  transition: all 1s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+.scroll-animate.rotate-in {
+  opacity: 0;
+  transform: rotate(-10deg) translateY(40px);
+  transition: all 1.2s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+/* Animation when in view */
+.scroll-animate.animate-in {
   opacity: 1;
-  transform: translateY(0) translateX(0) scale(1);
+  transform: translateY(0) translateX(0) scale(1) rotate(0);
 }
 
 /* Premium gradient backgrounds */

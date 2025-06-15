@@ -77,7 +77,7 @@ const Portfolio = () => {
   return (
     <section id="portfolio" className="py-32 bg-background relative">
       <div className="container mx-auto px-6">
-        <div className="text-center mb-24 reveal-scale">
+        <div className="text-center mb-24 scroll-animate fade-up">
           <h2 className="text-5xl md:text-6xl font-light mb-8 text-balance">
             Featured <span className="gradient-text font-medium">Work</span>
           </h2>
@@ -90,10 +90,7 @@ const Portfolio = () => {
           {portfolioItems.map((item, index) => (
             <Dialog key={item.id}>
               <DialogTrigger asChild>
-                <div
-                  className="reveal-up cursor-pointer group"
-                  style={{ animationDelay: `${index * 0.1}s` }}
-                >
+                <div className="scroll-animate scale-up cursor-pointer group">
                   <Card className="premium-card overflow-hidden h-full">
                     <div className="relative">
                       {/* Image */}
