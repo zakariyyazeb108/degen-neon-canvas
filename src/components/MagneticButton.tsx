@@ -27,19 +27,20 @@ const MagneticButton: React.FC<MagneticButtonProps> = ({
       const y = e.clientY - rect.top - rect.height / 2;
       
       const distance = Math.sqrt(x * x + y * y);
-      const maxDistance = 100;
+      const maxDistance = 80;
       
       if (distance < maxDistance) {
         const force = (maxDistance - distance) / maxDistance;
-        const moveX = x * force * 0.3;
-        const moveY = y * force * 0.3;
+        const moveX = x * force * 0.15;
+        const moveY = y * force * 0.15;
         
-        button.style.transform = `translate(${moveX}px, ${moveY}px) scale(1.05)`;
+        button.style.transform = `translate(${moveX}px, ${moveY}px)`;
       }
     };
 
     const handleMouseLeave = () => {
-      button.style.transform = 'translate(0px, 0px) scale(1)';
+      button.style.transform = 'translate(0px, 0px)';
+      button.style.transition = 'transform 0.4s cubic-bezier(0.23, 1, 0.32, 1)';
     };
 
     const handleMouseEnter = () => {
@@ -62,7 +63,7 @@ const MagneticButton: React.FC<MagneticButtonProps> = ({
       ref={buttonRef}
       size={size}
       onClick={onClick}
-      className={`transition-all duration-300 ${className}`}
+      className={`${className}`}
       style={{ willChange: 'transform' }}
     >
       {children}
