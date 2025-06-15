@@ -10,7 +10,7 @@ interface ScrollAnimationOptions {
 export const useScrollAnimation = (options: ScrollAnimationOptions = {}) => {
   const {
     threshold = 0.1,
-    rootMargin = '0px 0px -100px 0px',
+    rootMargin = '0px 0px -80px 0px',
     triggerOnce = true
   } = options;
 
@@ -29,19 +29,17 @@ export const useScrollAnimation = (options: ScrollAnimationOptions = {}) => {
           const element = entry.target as HTMLElement;
           
           if (entry.isIntersecting) {
-            // Add animation classes with a slight delay for smoother effect
-            setTimeout(() => {
-              element.classList.add('animate-in');
-            }, 50);
+            // Add animation classes immediately for smooth transition
+            element.classList.add('animate-in');
             
-            // Add staggered delay for sibling elements with softer timing
+            // Add staggered delay for sibling elements
             const parent = element.parentElement;
             if (parent) {
               const siblings = Array.from(parent.children).filter(child => 
                 child.classList.contains('scroll-animate')
               );
               const index = siblings.indexOf(element);
-              element.style.animationDelay = `${index * 0.15}s`;
+              element.style.transitionDelay = `${index * 0.1}s`;
             }
 
             // If triggerOnce is true, stop observing this element
@@ -50,7 +48,7 @@ export const useScrollAnimation = (options: ScrollAnimationOptions = {}) => {
             }
           } else if (!triggerOnce) {
             element.classList.remove('animate-in');
-            element.style.animationDelay = '';
+            element.style.transitionDelay = '';
           }
         });
       },

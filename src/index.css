@@ -67,54 +67,68 @@
   will-change: transform;
 }
 
-/* Beautiful, soft scroll animations with Apple-style easing */
+/* Ultra-smooth scroll animations with custom easing */
 .scroll-animate {
   opacity: 0;
-  transform: translateY(30px);
-  transition: all 1.2s cubic-bezier(0.16, 1, 0.3, 1);
+  transform: translateY(20px);
+  transition: 
+    opacity 1.8s cubic-bezier(0.19, 1, 0.22, 1),
+    transform 1.8s cubic-bezier(0.19, 1, 0.22, 1);
   will-change: opacity, transform;
 }
 
 .scroll-animate.fade-up {
   opacity: 0;
-  transform: translateY(50px);
-  transition: all 1.4s cubic-bezier(0.16, 1, 0.3, 1);
+  transform: translateY(40px);
+  transition: 
+    opacity 2s cubic-bezier(0.19, 1, 0.22, 1),
+    transform 2s cubic-bezier(0.19, 1, 0.22, 1);
 }
 
 .scroll-animate.fade-down {
   opacity: 0;
-  transform: translateY(-30px);
-  transition: all 1.2s cubic-bezier(0.16, 1, 0.3, 1);
+  transform: translateY(-20px);
+  transition: 
+    opacity 1.8s cubic-bezier(0.19, 1, 0.22, 1),
+    transform 1.8s cubic-bezier(0.19, 1, 0.22, 1);
 }
 
 .scroll-animate.fade-left {
   opacity: 0;
-  transform: translateX(-40px);
-  transition: all 1.3s cubic-bezier(0.16, 1, 0.3, 1);
+  transform: translateX(-30px);
+  transition: 
+    opacity 1.9s cubic-bezier(0.19, 1, 0.22, 1),
+    transform 1.9s cubic-bezier(0.19, 1, 0.22, 1);
 }
 
 .scroll-animate.fade-right {
   opacity: 0;
-  transform: translateX(40px);
-  transition: all 1.3s cubic-bezier(0.16, 1, 0.3, 1);
+  transform: translateX(30px);
+  transition: 
+    opacity 1.9s cubic-bezier(0.19, 1, 0.22, 1),
+    transform 1.9s cubic-bezier(0.19, 1, 0.22, 1);
 }
 
 .scroll-animate.scale-up {
   opacity: 0;
-  transform: scale(0.9) translateY(20px);
-  transition: all 1.5s cubic-bezier(0.16, 1, 0.3, 1);
+  transform: scale(0.95) translateY(15px);
+  transition: 
+    opacity 2.2s cubic-bezier(0.19, 1, 0.22, 1),
+    transform 2.2s cubic-bezier(0.19, 1, 0.22, 1);
 }
 
 .scroll-animate.rotate-in {
   opacity: 0;
-  transform: rotate(-5deg) translateY(30px) scale(0.95);
-  transition: all 1.6s cubic-bezier(0.16, 1, 0.3, 1);
+  transform: rotate(-3deg) translateY(20px) scale(0.98);
+  transition: 
+    opacity 2.4s cubic-bezier(0.19, 1, 0.22, 1),
+    transform 2.4s cubic-bezier(0.19, 1, 0.22, 1);
 }
 
-/* Smooth animation when in view */
+/* Silky smooth animation when in view */
 .scroll-animate.animate-in {
-  opacity: 1 !important;
-  transform: translateY(0) translateX(0) scale(1) rotate(0) !important;
+  opacity: 1;
+  transform: translateY(0) translateX(0) scale(1) rotate(0);
 }
 
 /* Premium gradient backgrounds */
