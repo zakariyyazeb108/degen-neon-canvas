@@ -11,14 +11,14 @@ const Portfolio = () => {
       description: "Eye-catching banner designs for web and social media campaigns",
       icon: Image,
       count: "25+ Projects",
-      primaryColor: "from-violet-600/30 via-purple-500/20 to-fuchsia-600/30",
-      accentColor: "from-violet-400 to-purple-300",
-      glowColor: "shadow-violet-500/25",
-      hoverGlow: "group-hover:shadow-violet-400/40",
-      borderGradient: "bg-gradient-to-r from-violet-500/50 via-purple-400/30 to-fuchsia-500/50",
-      iconBg: "bg-gradient-to-br from-violet-500/20 to-purple-600/30",
-      textAccent: "text-violet-300",
-      hoverText: "group-hover:text-violet-200",
+      primaryColor: "from-blue-600/20 via-blue-500/10 to-purple-600/20",
+      accentColor: "from-blue-400 to-blue-300",
+      glowColor: "shadow-blue-500/20",
+      hoverGlow: "group-hover:shadow-blue-400/30",
+      borderGradient: "bg-gradient-to-r from-blue-500/30 via-blue-400/20 to-purple-500/30",
+      iconBg: "bg-gradient-to-br from-blue-500/15 to-purple-600/20",
+      textAccent: "text-blue-300",
+      hoverText: "group-hover:text-blue-200",
       path: "/portfolio/banners"
     },
     {
@@ -27,14 +27,14 @@ const Portfolio = () => {
       description: "Modern interfaces and user experiences that convert",
       icon: Monitor,
       count: "15+ Projects",
-      primaryColor: "from-cyan-600/30 via-blue-500/20 to-indigo-600/30",
-      accentColor: "from-cyan-400 to-blue-300",
-      glowColor: "shadow-cyan-500/25",
-      hoverGlow: "group-hover:shadow-cyan-400/40",
-      borderGradient: "bg-gradient-to-r from-cyan-500/50 via-blue-400/30 to-indigo-500/50",
-      iconBg: "bg-gradient-to-br from-cyan-500/20 to-blue-600/30",
-      textAccent: "text-cyan-300",
-      hoverText: "group-hover:text-cyan-200",
+      primaryColor: "from-blue-600/20 via-purple-500/10 to-blue-600/20",
+      accentColor: "from-blue-400 to-purple-300",
+      glowColor: "shadow-blue-500/20",
+      hoverGlow: "group-hover:shadow-blue-400/30",
+      borderGradient: "bg-gradient-to-r from-blue-500/30 via-purple-400/20 to-blue-500/30",
+      iconBg: "bg-gradient-to-br from-blue-500/15 to-purple-600/20",
+      textAccent: "text-blue-300",
+      hoverText: "group-hover:text-blue-200",
       path: "/portfolio/uiux"
     },
     {
@@ -43,14 +43,14 @@ const Portfolio = () => {
       description: "Profit & loss visualizations for trading communities",
       icon: TrendingUp,
       count: "30+ Graphics",
-      primaryColor: "from-emerald-600/30 via-green-500/20 to-teal-600/30",
-      accentColor: "from-emerald-400 to-green-300",
-      glowColor: "shadow-emerald-500/25",
-      hoverGlow: "group-hover:shadow-emerald-400/40",
-      borderGradient: "bg-gradient-to-r from-emerald-500/50 via-green-400/30 to-teal-500/50",
-      iconBg: "bg-gradient-to-br from-emerald-500/20 to-green-600/30",
-      textAccent: "text-emerald-300",
-      hoverText: "group-hover:text-emerald-200",
+      primaryColor: "from-purple-600/20 via-blue-500/10 to-purple-600/20",
+      accentColor: "from-purple-400 to-blue-300",
+      glowColor: "shadow-purple-500/20",
+      hoverGlow: "group-hover:shadow-purple-400/30",
+      borderGradient: "bg-gradient-to-r from-purple-500/30 via-blue-400/20 to-purple-500/30",
+      iconBg: "bg-gradient-to-br from-purple-500/15 to-blue-600/20",
+      textAccent: "text-purple-300",
+      hoverText: "group-hover:text-purple-200",
       path: "/portfolio/pnl"
     },
     {
@@ -59,14 +59,14 @@ const Portfolio = () => {
       description: "Complete visual packages for brands and campaigns",
       icon: Package,
       count: "20+ Packs",
-      primaryColor: "from-orange-600/30 via-amber-500/20 to-rose-600/30",
-      accentColor: "from-orange-400 to-amber-300",
-      glowColor: "shadow-orange-500/25",
-      hoverGlow: "group-hover:shadow-orange-400/40",
-      borderGradient: "bg-gradient-to-r from-orange-500/50 via-amber-400/30 to-rose-500/50",
-      iconBg: "bg-gradient-to-br from-orange-500/20 to-amber-600/30",
-      textAccent: "text-orange-300",
-      hoverText: "group-hover:text-orange-200",
+      primaryColor: "from-purple-600/20 via-purple-500/10 to-blue-600/20",
+      accentColor: "from-purple-400 to-blue-300",
+      glowColor: "shadow-purple-500/20",
+      hoverGlow: "group-hover:shadow-purple-400/30",
+      borderGradient: "bg-gradient-to-r from-purple-500/30 via-purple-400/20 to-blue-500/30",
+      iconBg: "bg-gradient-to-br from-purple-500/15 to-blue-600/20",
+      textAccent: "text-purple-300",
+      hoverText: "group-hover:text-purple-200",
       path: "/portfolio/graphics"
     }
   ];
@@ -76,7 +76,7 @@ const Portfolio = () => {
       {/* Advanced background with moving gradients */}
       <div className="absolute inset-0 opacity-30">
         <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-gradient-to-r from-blue-600/10 to-purple-600/10 rounded-full blur-3xl animate-pulse"></div>
-        <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-gradient-to-r from-emerald-600/10 to-cyan-600/10 rounded-full blur-3xl animate-pulse delay-1000"></div>
+        <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-gradient-to-r from-purple-600/10 to-blue-600/10 rounded-full blur-3xl animate-pulse delay-1000"></div>
       </div>
       
       {/* Geometric grid overlay */}
@@ -87,7 +87,7 @@ const Portfolio = () => {
       <div className="container mx-auto px-6 relative z-10">
         <div className="text-center mb-24">
           <h2 className="text-5xl md:text-6xl font-light mb-8 text-balance">
-            My <span className="gradient-text font-medium bg-gradient-to-r from-blue-400 via-purple-400 to-emerald-400 bg-clip-text text-transparent">Portfolio</span>
+            My <span className="gradient-text font-medium bg-gradient-to-r from-blue-400 via-purple-400 to-blue-400 bg-clip-text text-transparent">Portfolio</span>
           </h2>
           <p className="text-xl text-white/60 max-w-2xl mx-auto font-light leading-relaxed">
             Explore different categories of design work, each crafted with precision and creativity
