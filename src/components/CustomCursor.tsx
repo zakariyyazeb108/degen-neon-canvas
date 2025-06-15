@@ -1,58 +1,48 @@
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 
 const CustomCursor = () => {
   const [position, setPosition] = useState({ x: 0, y: 0 });
-  const [trails, setTrails] = useState<{ x: number; y: number; id: number }[]>([]);
+  const [isVisible, setIsVisible] = useState(false);
+
+  const updateCursor = useCallback((e: MouseEvent) => {
+    setPosition({ x: e.clientX, y: e.clientY });
+    if (!isVisible) setIsVisible(true);
+  }, [isVisible]);
 
   useEffect(() => {
-    let trailId = 0;
+    let animationId: number;
 
     const handleMouseMove = (e: MouseEvent) => {
-      setPosition({ x: e.clientX, y: e.clientY });
-      
-      // Add trail
-      setTrails(prev => {
-        const newTrail = { x: e.clientX, y: e.clientY, id: trailId++ };
-        const updated = [...prev, newTrail].slice(-5); // Keep only last 5 trails
-        return updated;
-      });
+      cancelAnimationFrame(animationId);
+      animationId = requestAnimationFrame(() => updateCursor(e));
     };
 
-    const removeTrail = () => {
-      setTrails(prev => prev.slice(1));
-    };
+    const handleMouseLeave = () => setIsVisible(false);
+    const handleMouseEnter = () => setIsVisible(true);
 
     document.addEventListener('mousemove', handleMouseMove);
-    const interval = setInterval(removeTrail, 100);
+    document.addEventListener('mouseleave', handleMouseLeave);
+    document.addEventListener('mouseenter', handleMouseEnter);
 
     return () => {
       document.removeEventListener('mousemove', handleMouseMove);
-      clearInterval(interval);
+      document.removeEventListener('mouseleave', handleMouseLeave);
+      document.removeEventListener('mouseenter', handleMouseEnter);
+      cancelAnimationFrame(animationId);
     };
-  }, []);
+  }, [updateCursor]);
+
+  if (!isVisible) return null;
 
   return (
-    <>
-      <div
-        className="cursor"
-        style={{
-          left: position.x - 10,
-          top: position.y - 10,
-        }}
-      />
-      {trails.map((trail, index) => (
-        <div
-          key={trail.id}
-          className="cursor-trail"
-          style={{
-            left: trail.x - 4,
-            top: trail.y - 4,
-            opacity: (index + 1) / trails.length * 0.5,
-          }}
-        />
-      ))}
-    </>
+    <div
+      className="cursor-main"
+      style={{
+        left: position.x - 6,
+        top: position.y - 6,
+      }}
+    />
   );
 };
 
