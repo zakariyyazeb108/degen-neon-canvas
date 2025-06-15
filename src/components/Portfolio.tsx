@@ -11,10 +11,14 @@ const Portfolio = () => {
       description: "Eye-catching banner designs for web and social media campaigns",
       icon: Image,
       count: "25+ Projects",
-      color: "from-purple-500/20 to-pink-500/20",
-      borderColor: "border-purple-500/30",
-      iconColor: "text-purple-400",
-      hoverColor: "group-hover:text-purple-300",
+      primaryColor: "from-violet-600/30 via-purple-500/20 to-fuchsia-600/30",
+      accentColor: "from-violet-400 to-purple-300",
+      glowColor: "shadow-violet-500/25",
+      hoverGlow: "group-hover:shadow-violet-400/40",
+      borderGradient: "bg-gradient-to-r from-violet-500/50 via-purple-400/30 to-fuchsia-500/50",
+      iconBg: "bg-gradient-to-br from-violet-500/20 to-purple-600/30",
+      textAccent: "text-violet-300",
+      hoverText: "group-hover:text-violet-200",
       path: "/portfolio/banners"
     },
     {
@@ -23,10 +27,14 @@ const Portfolio = () => {
       description: "Modern interfaces and user experiences that convert",
       icon: Monitor,
       count: "15+ Projects",
-      color: "from-blue-500/20 to-cyan-500/20",
-      borderColor: "border-blue-500/30",
-      iconColor: "text-blue-400",
-      hoverColor: "group-hover:text-blue-300",
+      primaryColor: "from-cyan-600/30 via-blue-500/20 to-indigo-600/30",
+      accentColor: "from-cyan-400 to-blue-300",
+      glowColor: "shadow-cyan-500/25",
+      hoverGlow: "group-hover:shadow-cyan-400/40",
+      borderGradient: "bg-gradient-to-r from-cyan-500/50 via-blue-400/30 to-indigo-500/50",
+      iconBg: "bg-gradient-to-br from-cyan-500/20 to-blue-600/30",
+      textAccent: "text-cyan-300",
+      hoverText: "group-hover:text-cyan-200",
       path: "/portfolio/uiux"
     },
     {
@@ -35,10 +43,14 @@ const Portfolio = () => {
       description: "Profit & loss visualizations for trading communities",
       icon: TrendingUp,
       count: "30+ Graphics",
-      color: "from-green-500/20 to-emerald-500/20",
-      borderColor: "border-green-500/30",
-      iconColor: "text-green-400",
-      hoverColor: "group-hover:text-green-300",
+      primaryColor: "from-emerald-600/30 via-green-500/20 to-teal-600/30",
+      accentColor: "from-emerald-400 to-green-300",
+      glowColor: "shadow-emerald-500/25",
+      hoverGlow: "group-hover:shadow-emerald-400/40",
+      borderGradient: "bg-gradient-to-r from-emerald-500/50 via-green-400/30 to-teal-500/50",
+      iconBg: "bg-gradient-to-br from-emerald-500/20 to-green-600/30",
+      textAccent: "text-emerald-300",
+      hoverText: "group-hover:text-emerald-200",
       path: "/portfolio/pnl"
     },
     {
@@ -47,57 +59,173 @@ const Portfolio = () => {
       description: "Complete visual packages for brands and campaigns",
       icon: Package,
       count: "20+ Packs",
-      color: "from-orange-500/20 to-red-500/20",
-      borderColor: "border-orange-500/30",
-      iconColor: "text-orange-400",
-      hoverColor: "group-hover:text-orange-300",
+      primaryColor: "from-orange-600/30 via-amber-500/20 to-rose-600/30",
+      accentColor: "from-orange-400 to-amber-300",
+      glowColor: "shadow-orange-500/25",
+      hoverGlow: "group-hover:shadow-orange-400/40",
+      borderGradient: "bg-gradient-to-r from-orange-500/50 via-amber-400/30 to-rose-500/50",
+      iconBg: "bg-gradient-to-br from-orange-500/20 to-amber-600/30",
+      textAccent: "text-orange-300",
+      hoverText: "group-hover:text-orange-200",
       path: "/portfolio/graphics"
     }
   ];
 
   return (
-    <section id="portfolio" className="py-32 bg-background relative">
-      <div className="container mx-auto px-6">
+    <section id="portfolio" className="py-32 bg-background relative overflow-hidden">
+      {/* Advanced background with moving gradients */}
+      <div className="absolute inset-0 opacity-30">
+        <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-gradient-to-r from-blue-600/10 to-purple-600/10 rounded-full blur-3xl animate-pulse"></div>
+        <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-gradient-to-r from-emerald-600/10 to-cyan-600/10 rounded-full blur-3xl animate-pulse delay-1000"></div>
+      </div>
+      
+      {/* Geometric grid overlay */}
+      <div className="absolute inset-0 opacity-[0.02]">
+        <div className="absolute inset-0 bg-[linear-gradient(90deg,rgba(255,255,255,0.1)_1px,transparent_1px),linear-gradient(rgba(255,255,255,0.1)_1px,transparent_1px)] bg-[size:100px_100px] animate-[drift_30s_linear_infinite]"></div>
+      </div>
+
+      <div className="container mx-auto px-6 relative z-10">
         <div className="text-center mb-24">
           <h2 className="text-5xl md:text-6xl font-light mb-8 text-balance">
-            My <span className="gradient-text font-medium">Portfolio</span>
+            My <span className="gradient-text font-medium bg-gradient-to-r from-blue-400 via-purple-400 to-emerald-400 bg-clip-text text-transparent">Portfolio</span>
           </h2>
-          <p className="text-xl text-white/50 max-w-2xl mx-auto font-light">
+          <p className="text-xl text-white/60 max-w-2xl mx-auto font-light leading-relaxed">
             Explore different categories of design work, each crafted with precision and creativity
           </p>
         </div>
         
-        <div className="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto">
-          {categories.map((category) => (
-            <Link key={category.id} to={category.path} className="block group">
-              <Card className={`premium-card p-8 h-full transition-all duration-700 hover:scale-105 bg-gradient-to-br ${category.color} border-2 ${category.borderColor} hover:${category.borderColor.replace('/30', '/50')}`}>
-                <div className="space-y-6">
-                  {/* Icon & Count */}
+        <div className="grid md:grid-cols-2 gap-8 max-w-5xl mx-auto">
+          {categories.map((category, index) => (
+            <Link 
+              key={category.id} 
+              to={category.path} 
+              className="block group"
+              style={{ animationDelay: `${index * 0.1}s` }}
+            >
+              <Card className={`
+                relative overflow-hidden p-8 h-full
+                bg-gradient-to-br ${category.primaryColor}
+                backdrop-blur-xl border-0
+                shadow-2xl ${category.glowColor} ${category.hoverGlow}
+                transition-all duration-700 ease-out
+                hover:scale-[1.02] hover:-translate-y-2
+                transform-gpu perspective-1000
+                before:absolute before:inset-0 before:opacity-0 before:bg-gradient-to-r before:from-white/5 before:via-white/10 before:to-white/5
+                hover:before:opacity-100 before:transition-opacity before:duration-700
+                after:absolute after:inset-0 after:bg-gradient-to-br after:${category.primaryColor} after:opacity-0
+                hover:after:opacity-20 after:transition-opacity after:duration-700
+              `}>
+                
+                {/* Advanced border gradient */}
+                <div className="absolute inset-0 rounded-lg p-[1px] bg-gradient-to-r from-white/20 via-white/5 to-white/20 group-hover:from-white/30 group-hover:via-white/10 group-hover:to-white/30 transition-all duration-700">
+                  <div className="w-full h-full rounded-lg bg-transparent"></div>
+                </div>
+
+                {/* Floating particles effect */}
+                <div className="absolute inset-0 overflow-hidden rounded-lg">
+                  <div className="absolute top-1/4 left-1/4 w-2 h-2 bg-white/20 rounded-full animate-float opacity-0 group-hover:opacity-100 transition-opacity duration-700 delay-100"></div>
+                  <div className="absolute top-3/4 right-1/3 w-1 h-1 bg-white/30 rounded-full animate-float opacity-0 group-hover:opacity-100 transition-opacity duration-700 delay-300"></div>
+                  <div className="absolute bottom-1/3 left-2/3 w-3 h-3 bg-white/10 rounded-full animate-float opacity-0 group-hover:opacity-100 transition-opacity duration-700 delay-500"></div>
+                </div>
+
+                {/* Content wrapper with advanced animations */}
+                <div className="relative z-10 space-y-6 h-full flex flex-col">
+                  
+                  {/* Header section with icon and count */}
                   <div className="flex items-start justify-between">
-                    <div className={`inline-flex p-4 rounded-2xl bg-gradient-to-br ${category.color} border ${category.borderColor}`}>
-                      <category.icon className={`w-10 h-10 ${category.iconColor} transition-colors duration-500`} />
+                    <div className={`
+                      relative p-4 rounded-2xl ${category.iconBg}
+                      backdrop-blur-sm border border-white/10
+                      shadow-lg transform transition-all duration-500
+                      group-hover:scale-110 group-hover:rotate-3
+                      before:absolute before:inset-0 before:rounded-2xl before:bg-gradient-to-br before:from-white/10 before:to-transparent before:opacity-0
+                      group-hover:before:opacity-100 before:transition-opacity before:duration-500
+                    `}>
+                      <category.icon className={`
+                        w-10 h-10 ${category.textAccent} ${category.hoverText}
+                        transition-all duration-500 relative z-10
+                        drop-shadow-lg group-hover:drop-shadow-xl
+                      `} />
+                      
+                      {/* Icon glow effect */}
+                      <div className={`
+                        absolute inset-0 rounded-2xl bg-gradient-to-br ${category.accentColor}
+                        opacity-0 group-hover:opacity-20 blur-xl transition-all duration-700
+                      `}></div>
                     </div>
-                    <div className="text-right">
-                      <span className={`${category.iconColor} font-medium text-sm block`}>{category.count}</span>
-                      <ArrowUpRight className={`w-5 h-5 text-white/40 ${category.hoverColor} transition-all duration-500 transform group-hover:translate-x-1 group-hover:-translate-y-1 mt-2`} />
+                    
+                    <div className="text-right transform transition-all duration-500 group-hover:translate-x-1">
+                      <span className={`
+                        ${category.textAccent} ${category.hoverText} font-medium text-sm block
+                        transition-colors duration-500
+                      `}>
+                        {category.count}
+                      </span>
+                      <ArrowUpRight className={`
+                        w-6 h-6 text-white/40 ${category.hoverText} mt-2
+                        transition-all duration-700 transform
+                        group-hover:translate-x-2 group-hover:-translate-y-2 group-hover:scale-110
+                        drop-shadow-lg
+                      `} />
                     </div>
                   </div>
                   
-                  {/* Content */}
-                  <div className="space-y-4">
-                    <h3 className={`text-3xl font-medium text-white ${category.hoverColor} transition-colors duration-500`}>
+                  {/* Main content section */}
+                  <div className="space-y-4 flex-grow">
+                    <h3 className={`
+                      text-3xl font-medium text-white ${category.hoverText}
+                      transition-all duration-500 transform
+                      group-hover:translate-x-1
+                      bg-gradient-to-r ${category.accentColor} bg-clip-text group-hover:text-transparent
+                    `}>
                       {category.title}
                     </h3>
-                    <p className="text-white/60 leading-relaxed font-light">
+                    <p className="text-white/70 group-hover:text-white/90 leading-relaxed font-light transition-colors duration-500 transform group-hover:translate-x-1">
                       {category.description}
                     </p>
                   </div>
                   
-                  {/* Hover indicator */}
-                  <div className="pt-4">
-                    <div className={`w-full h-1 bg-gradient-to-r ${category.color.replace('/20', '/40')} rounded-full transform scale-x-0 group-hover:scale-x-100 transition-transform duration-700 origin-left`}></div>
+                  {/* Advanced progress indicator */}
+                  <div className="pt-4 space-y-3">
+                    <div className="flex items-center justify-between text-xs text-white/40 group-hover:text-white/60 transition-colors duration-500">
+                      <span>View Portfolio</span>
+                      <span className="opacity-0 group-hover:opacity-100 transition-opacity duration-500">→</span>
+                    </div>
+                    
+                    {/* Multi-layered progress bar */}
+                    <div className="relative">
+                      <div className="w-full h-1 bg-white/10 rounded-full overflow-hidden">
+                        <div className={`
+                          h-full bg-gradient-to-r ${category.accentColor} rounded-full
+                          transform scale-x-0 group-hover:scale-x-100 
+                          transition-transform duration-700 origin-left
+                          shadow-lg shadow-current/50
+                        `}></div>
+                      </div>
+                      
+                      {/* Glow effect for progress bar */}
+                      <div className={`
+                        absolute inset-0 h-1 bg-gradient-to-r ${category.accentColor} rounded-full
+                        opacity-0 group-hover:opacity-30 blur-sm
+                        transition-opacity duration-700
+                      `}></div>
+                    </div>
                   </div>
                 </div>
+
+                {/* Advanced hover overlay with gradient mesh */}
+                <div className={`
+                  absolute inset-0 opacity-0 group-hover:opacity-100
+                  bg-gradient-to-br from-white/5 via-transparent to-white/10
+                  transition-opacity duration-700 pointer-events-none
+                `}></div>
+                
+                {/* Corner accent decoration */}
+                <div className={`
+                  absolute top-0 right-0 w-32 h-32
+                  bg-gradient-to-bl ${category.accentColor} opacity-0 group-hover:opacity-10
+                  transition-opacity duration-700 blur-3xl
+                `}></div>
               </Card>
             </Link>
           ))}
