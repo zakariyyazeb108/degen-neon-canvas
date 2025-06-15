@@ -101,7 +101,7 @@ const Contact = () => {
                 <Card className="premium-card p-4 text-center">
                   <Clock className="w-6 h-6 text-blue-400 mx-auto mb-2" />
                   <p className="text-white/80 font-medium">Response Time</p>
-                  <p className="text-white/50 text-sm">< 24 hours</p>
+                  <p className="text-white/50 text-sm">Under 24 hours</p>
                 </Card>
                 <Card className="premium-card p-4 text-center">
                   <DollarSign className="w-6 h-6 text-blue-400 mx-auto mb-2" />
