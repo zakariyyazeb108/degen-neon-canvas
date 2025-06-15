@@ -10,7 +10,7 @@ interface ScrollAnimationOptions {
 export const useScrollAnimation = (options: ScrollAnimationOptions = {}) => {
   const {
     threshold = 0.1,
-    rootMargin = '0px 0px -80px 0px',
+    rootMargin = '0px 0px -100px 0px',
     triggerOnce = true
   } = options;
 
@@ -29,18 +29,23 @@ export const useScrollAnimation = (options: ScrollAnimationOptions = {}) => {
           const element = entry.target as HTMLElement;
           
           if (entry.isIntersecting) {
-            // Add animation classes immediately for smooth transition
-            element.classList.add('animate-in');
+            // Force a reflow to ensure the initial state is applied
+            element.offsetHeight;
             
-            // Add staggered delay for sibling elements
-            const parent = element.parentElement;
-            if (parent) {
-              const siblings = Array.from(parent.children).filter(child => 
-                child.classList.contains('scroll-animate')
-              );
-              const index = siblings.indexOf(element);
-              element.style.transitionDelay = `${index * 0.1}s`;
-            }
+            // Use requestAnimationFrame to ensure smooth transition
+            requestAnimationFrame(() => {
+              element.classList.add('animate-in');
+              
+              // Add staggered delay for sibling elements
+              const parent = element.parentElement;
+              if (parent) {
+                const siblings = Array.from(parent.children).filter(child => 
+                  child.classList.contains('scroll-animate')
+                );
+                const index = siblings.indexOf(element);
+                element.style.transitionDelay = `${index * 100}ms`;
+              }
+            });
 
             // If triggerOnce is true, stop observing this element
             if (triggerOnce) {
@@ -62,10 +67,38 @@ export const useScrollAnimation = (options: ScrollAnimationOptions = {}) => {
     const observeElements = () => {
       const elements = document.querySelectorAll('.scroll-animate');
       console.log('Found scroll-animate elements:', elements.length);
+      
       elements.forEach((el) => {
-        console.log('Observing element:', el.className);
-        observerRef.current?.observe(el);
+        const element = el as HTMLElement;
+        console.log('Observing element:', element.className);
+        
+        // Ensure initial state is set
+        if (!element.classList.contains('animate-in')) {
+          element.style.opacity = '0';
+          element.style.transform = getInitialTransform(element);
+        }
+        
+        observerRef.current?.observe(element);
       });
+    };
+
+    // Get initial transform based on animation class
+    const getInitialTransform = (element: HTMLElement) => {
+      if (element.classList.contains('fade-up')) {
+        return 'translateY(60px)';
+      } else if (element.classList.contains('fade-down')) {
+        return 'translateY(-40px)';
+      } else if (element.classList.contains('fade-left')) {
+        return 'translateX(-50px)';
+      } else if (element.classList.contains('fade-right')) {
+        return 'translateX(50px)';
+      } else if (element.classList.contains('scale-up')) {
+        return 'scale(0.8) translateY(30px)';
+      } else if (element.classList.contains('rotate-in')) {
+        return 'rotate(-5deg) translateY(40px) scale(0.9)';
+      } else {
+        return 'translateY(40px)';
+      }
     };
 
     // Initial observation
