@@ -120,18 +120,18 @@ const BannersPortfolio = () => {
       <CustomCursor />
       <Navigation />
       
-      {/* Degen Mode Toggle */}
-      <div className="fixed top-24 right-6 z-40">
+      {/* Degen Mode Toggle - Fixed positioning */}
+      <div className="fixed top-28 right-8 z-50">
         <Button
           onClick={() => isDegenMode ? setIsDegenMode(false) : setShowDegenInput(true)}
           variant={isDegenMode ? "default" : "outline"}
           size="icon"
-          className={isDegenMode ? "bg-red-500 hover:bg-red-600" : ""}
+          className={`${isDegenMode ? "bg-red-500 hover:bg-red-600 text-white" : "bg-black/50 backdrop-blur-sm border-white/20 text-white hover:bg-white/10"} shadow-lg`}
         >
-          <Cog className="h-4 w-4" />
+          <Cog className="h-5 w-5" />
         </Button>
         {isDegenMode && (
-          <div className="absolute top-12 right-0 text-xs text-red-400 font-bold">
+          <div className="absolute top-12 right-0 text-xs text-red-400 font-bold whitespace-nowrap">
             DEGEN MODE
           </div>
         )}
