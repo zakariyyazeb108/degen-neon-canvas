@@ -5,8 +5,17 @@ import { ArrowLeft, ExternalLink } from "lucide-react";
 import { Link } from "react-router-dom";
 import Navigation from "@/components/Navigation";
 import CustomCursor from "@/components/CustomCursor";
+import ImageViewer from "@/components/ImageViewer";
 
 const BannersPortfolio = () => {
+  const [selectedImage, setSelectedImage] = useState<{
+    src: string;
+    alt: string;
+    title: string;
+    description: string;
+    category: string;
+  } | null>(null);
+
   const banners = [
     {
       id: 1,
@@ -45,6 +54,20 @@ const BannersPortfolio = () => {
     }
   ];
 
+  const openImageViewer = (banner: typeof banners[0]) => {
+    setSelectedImage({
+      src: banner.image,
+      alt: banner.title,
+      title: banner.title,
+      description: banner.description,
+      category: banner.category
+    });
+  };
+
+  const closeImageViewer = () => {
+    setSelectedImage(null);
+  };
+
   return (
     <div className="min-h-screen bg-background text-foreground">
       <CustomCursor />
@@ -71,8 +94,9 @@ const BannersPortfolio = () => {
             {banners.map((banner, index) => (
               <Card 
                 key={banner.id} 
-                className="premium-card group overflow-hidden"
+                className="premium-card group overflow-hidden cursor-pointer"
                 style={{ animationDelay: `${index * 0.1}s` }}
+                onClick={() => openImageViewer(banner)}
               >
                 <div className="relative">
                   {/* Banner Image */}
@@ -133,6 +157,19 @@ const BannersPortfolio = () => {
           </div>
         </div>
       </div>
+
+      {/* Image Viewer Modal */}
+      {selectedImage && (
+        <ImageViewer
+          isOpen={!!selectedImage}
+          onClose={closeImageViewer}
+          imageSrc={selectedImage.src}
+          imageAlt={selectedImage.alt}
+          title={selectedImage.title}
+          description={selectedImage.description}
+          category={selectedImage.category}
+        />
+      )}
     </div>
   );
 };
