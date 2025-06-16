@@ -163,6 +163,15 @@
   }
 }
 
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
 @keyframes shine {
   0% {
     transform: translateX(-100%) skewX(-12deg);
@@ -193,11 +202,15 @@
 }
 
 .animate-fade-in-up {
-  animation: fadeInUp 1s ease-out;
+  animation: fadeInUp 1s ease-out forwards;
 }
 
 .animate-slide-up {
-  animation: slideUp 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  animation: slideUp 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+}
+
+.animate-fade-in {
+  animation: fadeIn 1s ease-out forwards;
 }
 
 .animate-shine {
@@ -206,6 +219,10 @@
 
 .animate-pulse-slow {
   animation: pulseGlow 3s ease-in-out infinite;
+}
+
+.animate-float {
+  animation: floatSlow 8s ease-in-out infinite;
 }
 
 /* Floating elements */
