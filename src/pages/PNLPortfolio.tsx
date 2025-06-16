@@ -1,10 +1,10 @@
-
 import { useState } from "react";
 import { Card } from "@/components/ui/card";
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 import { ArrowLeft, ExternalLink } from "lucide-react";
 import { Link } from "react-router-dom";
 import Navigation from "@/components/Navigation";
+import CustomCursor from "@/components/CustomCursor";
 
 const PNLPortfolio = () => {
   const pnlItems = [
@@ -72,6 +72,7 @@ const PNLPortfolio = () => {
 
   return (
     <div className="min-h-screen bg-background text-foreground">
+      <CustomCursor />
       <Navigation />
       
       <div className="pt-32 pb-16">
