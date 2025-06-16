@@ -14,11 +14,11 @@ const Hero = () => {
         <div className="max-w-5xl mx-auto space-y-12">
           {/* Main heading with enhanced animations */}
           <div className="relative">
-            <h1 className="text-6xl md:text-8xl font-light leading-none mb-6 text-balance">
+            <h1 className="text-6xl md:text-8xl font-light leading-tight mb-6 text-balance">
               <span className="block text-white/90 animate-fade-in-up [animation-delay:0.2s] [animation-fill-mode:forwards] opacity-0">
                 Creative
               </span>
-              <span className="block gradient-text-animated font-medium relative opacity-100">
+              <span className="block gradient-text-animated font-medium relative opacity-100 leading-relaxed py-2">
                 <span className="inline-block">
                   Designer
                 </span>
