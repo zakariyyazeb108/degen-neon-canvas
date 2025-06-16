@@ -18,7 +18,7 @@ const Hero = () => {
               <span className="block text-white/90 animate-fade-in-up [animation-delay:0.2s] [animation-fill-mode:forwards] opacity-0">
                 Creative
               </span>
-              <span className="block gradient-text-animated font-medium relative overflow-hidden opacity-100">
+              <span className="block gradient-text-animated font-medium relative opacity-100">
                 <span className="inline-block">
                   Designer
                 </span>
