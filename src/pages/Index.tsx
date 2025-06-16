@@ -52,21 +52,21 @@ const Index = () => {
       <ParticleBackground />
       <CustomCursor />
       
-      {/* Universal Degen Mode Toggle - Fixed positioning */}
-      <div className="fixed top-28 right-8 z-50">
+      {/* Subtle Degen Mode Toggle - Less intrusive */}
+      <div className="fixed bottom-6 right-6 z-50">
         <Button
           onClick={toggleDegenMode}
-          variant={isDegenMode ? "default" : "outline"}
-          size="icon"
-          className={`${isDegenMode ? "bg-red-500 hover:bg-red-600 text-white" : "bg-black/50 backdrop-blur-sm border-white/20 text-white hover:bg-white/10"} shadow-lg`}
+          variant="ghost"
+          size="sm"
+          className={`${
+            isDegenMode 
+              ? "bg-red-500/20 hover:bg-red-500/30 text-red-400 border border-red-500/30" 
+              : "bg-white/5 hover:bg-white/10 text-white/40 hover:text-white/60 border border-white/10"
+          } backdrop-blur-sm transition-all duration-300 opacity-50 hover:opacity-100`}
         >
-          <Cog className="h-5 w-5" />
+          <Cog className="h-4 w-4" />
+          {isDegenMode && <span className="ml-2 text-xs">DEGEN</span>}
         </Button>
-        {isDegenMode && (
-          <div className="absolute top-12 right-0 text-xs text-red-400 font-bold whitespace-nowrap">
-            DEGEN MODE
-          </div>
-        )}
       </div>
 
       <Navigation />

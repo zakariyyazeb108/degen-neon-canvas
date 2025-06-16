@@ -1,7 +1,7 @@
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Card } from "@/components/ui/card";
-import { ArrowLeft, ExternalLink, Cog, Upload, X } from "lucide-react";
+import { ArrowLeft, ExternalLink, Upload } from "lucide-react";
 import { Link } from "react-router-dom";
 import Navigation from "@/components/Navigation";
 import CustomCursor from "@/components/CustomCursor";
@@ -20,8 +20,6 @@ const BannersPortfolio = () => {
     category: string;
   } | null>(null);
 
-  const [showDegenInput, setShowDegenInput] = useState(false);
-  const [degenCode, setDegenCode] = useState("");
   const [isDegenMode, setIsDegenMode] = useState(false);
   const [editingCard, setEditingCard] = useState<number | null>(null);
   const [newTitle, setNewTitle] = useState("");
@@ -66,16 +64,26 @@ const BannersPortfolio = () => {
     }
   ]);
 
-  const handleDegenCodeSubmit = () => {
-    if (degenCode === "DegenDesigns+123") {
-      setIsDegenMode(true);
-      setShowDegenInput(false);
-      setDegenCode("");
-    } else {
-      alert("Incorrect code! Try again.");
-      setDegenCode("");
-    }
-  };
+  // Check for Degen Mode from localStorage
+  useEffect(() => {
+    const checkDegenMode = () => {
+      const savedDegenMode = localStorage.getItem("degenMode");
+      setIsDegenMode(savedDegenMode === "true");
+    };
+
+    checkDegenMode();
+    
+    // Listen for storage changes
+    window.addEventListener('storage', checkDegenMode);
+    
+    // Also check periodically in case localStorage is updated on same tab
+    const interval = setInterval(checkDegenMode, 1000);
+
+    return () => {
+      window.removeEventListener('storage', checkDegenMode);
+      clearInterval(interval);
+    };
+  }, []);
 
   const openImageViewer = (banner: typeof banners[0]) => {
     if (isDegenMode) return; // Don't open viewer in degen mode
@@ -115,27 +123,21 @@ const BannersPortfolio = () => {
     setNewImage("");
   };
 
+  const addNewBanner = () => {
+    const newId = Math.max(...banners.map(b => b.id)) + 1;
+    setBanners([...banners, {
+      id: newId,
+      title: "New Banner",
+      description: "Add your banner description",
+      image: "",
+      category: "Custom"
+    }]);
+  };
+
   return (
     <div className="min-h-screen bg-background text-foreground">
       <CustomCursor />
       <Navigation />
-      
-      {/* Degen Mode Toggle - Fixed positioning */}
-      <div className="fixed top-28 right-8 z-50">
-        <Button
-          onClick={() => isDegenMode ? setIsDegenMode(false) : setShowDegenInput(true)}
-          variant={isDegenMode ? "default" : "outline"}
-          size="icon"
-          className={`${isDegenMode ? "bg-red-500 hover:bg-red-600 text-white" : "bg-black/50 backdrop-blur-sm border-white/20 text-white hover:bg-white/10"} shadow-lg`}
-        >
-          <Cog className="h-5 w-5" />
-        </Button>
-        {isDegenMode && (
-          <div className="absolute top-12 right-0 text-xs text-red-400 font-bold whitespace-nowrap">
-            DEGEN MODE
-          </div>
-        )}
-      </div>
       
       <div className="pt-32 pb-16">
         <div className="container mx-auto px-6">
@@ -153,6 +155,16 @@ const BannersPortfolio = () => {
             </p>
           </div>
 
+          {/* Add New Banner Button (Degen Mode) */}
+          {isDegenMode && (
+            <div className="mb-8">
+              <Button onClick={addNewBanner} className="bg-red-500 hover:bg-red-600">
+                <Upload className="w-4 h-4 mr-2" />
+                Add New Banner
+              </Button>
+            </div>
+          )}
+
           {/* Banner Grid */}
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
             {banners.map((banner, index) => (
@@ -165,14 +177,20 @@ const BannersPortfolio = () => {
                 <div className="relative">
                   {/* Banner Image */}
                   <div className="aspect-video overflow-hidden">
-                    <img 
-                      src={banner.image} 
-                      alt={banner.title}
-                      className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
-                    />
+                    {banner.image ? (
+                      <img 
+                        src={banner.image} 
+                        alt={banner.title}
+                        className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                      />
+                    ) : (
+                      <div className="w-full h-full bg-gray-800 flex items-center justify-center">
+                        <span className="text-gray-400">No image</span>
+                      </div>
+                    )}
                     
                     {/* Overlay */}
-                    {!isDegenMode && (
+                    {!isDegenMode && banner.image && (
                       <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
                         <ExternalLink className="w-8 h-8 text-white" />
                       </div>
@@ -237,37 +255,11 @@ const BannersPortfolio = () => {
         </div>
       </div>
 
-      {/* Degen Code Input Dialog */}
-      <Dialog open={showDegenInput} onOpenChange={setShowDegenInput}>
-        <DialogContent className="bg-background border-white/10">
-          <DialogHeader>
-            <DialogTitle className="text-white">Enter Degen Code</DialogTitle>
-          </DialogHeader>
-          <div className="space-y-4">
-            <Input
-              type="password"
-              placeholder="Enter code..."
-              value={degenCode}
-              onChange={(e) => setDegenCode(e.target.value)}
-              className="bg-background/50 border-white/20 text-white"
-            />
-            <div className="flex gap-2">
-              <Button onClick={handleDegenCodeSubmit} className="flex-1">
-                Activate Degen Mode
-              </Button>
-              <Button onClick={() => setShowDegenInput(false)} variant="outline" className="flex-1">
-                Cancel
-              </Button>
-            </div>
-          </div>
-        </DialogContent>
-      </Dialog>
-
       {/* Edit Card Dialog */}
       <Dialog open={editingCard !== null} onOpenChange={() => cancelEdit()}>
         <DialogContent className="bg-background border-white/10 max-w-2xl">
           <DialogHeader>
-            <DialogTitle className="text-white">Edit Card Content</DialogTitle>
+            <DialogTitle className="text-white">Edit Banner Content</DialogTitle>
           </DialogHeader>
           <div className="space-y-4">
             <div>

@@ -1,7 +1,7 @@
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Card } from "@/components/ui/card";
-import { ArrowLeft, Cog, Upload, ExternalLink } from "lucide-react";
+import { ArrowLeft, Upload, ExternalLink } from "lucide-react";
 import { Link } from "react-router-dom";
 import Navigation from "@/components/Navigation";
 import CustomCursor from "@/components/CustomCursor";
@@ -11,8 +11,6 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/u
 import { Textarea } from "@/components/ui/textarea";
 
 const UIUXPortfolio = () => {
-  const [showDegenInput, setShowDegenInput] = useState(false);
-  const [degenCode, setDegenCode] = useState("");
   const [isDegenMode, setIsDegenMode] = useState(false);
   const [editingCard, setEditingCard] = useState<number | null>(null);
   const [newTitle, setNewTitle] = useState("");
@@ -31,16 +29,26 @@ const UIUXPortfolio = () => {
     }
   ]);
 
-  const handleDegenCodeSubmit = () => {
-    if (degenCode === "DegenDesigns+123") {
-      setIsDegenMode(true);
-      setShowDegenInput(false);
-      setDegenCode("");
-    } else {
-      alert("Incorrect code! Try again.");
-      setDegenCode("");
-    }
-  };
+  // Check for Degen Mode from localStorage
+  useEffect(() => {
+    const checkDegenMode = () => {
+      const savedDegenMode = localStorage.getItem("degenMode");
+      setIsDegenMode(savedDegenMode === "true");
+    };
+
+    checkDegenMode();
+    
+    // Listen for storage changes
+    window.addEventListener('storage', checkDegenMode);
+    
+    // Also check periodically in case localStorage is updated on same tab
+    const interval = setInterval(checkDegenMode, 1000);
+
+    return () => {
+      window.removeEventListener('storage', checkDegenMode);
+      clearInterval(interval);
+    };
+  }, []);
 
   const startEditing = (project: typeof projects[0]) => {
     setEditingCard(project.id);
@@ -83,23 +91,6 @@ const UIUXPortfolio = () => {
     <div className="min-h-screen bg-background text-foreground">
       <CustomCursor />
       <Navigation />
-      
-      {/* Degen Mode Toggle */}
-      <div className="fixed top-24 right-6 z-40">
-        <Button
-          onClick={() => isDegenMode ? setIsDegenMode(false) : setShowDegenInput(true)}
-          variant={isDegenMode ? "default" : "outline"}
-          size="icon"
-          className={isDegenMode ? "bg-red-500 hover:bg-red-600" : ""}
-        >
-          <Cog className="h-4 w-4" />
-        </Button>
-        {isDegenMode && (
-          <div className="absolute top-12 right-0 text-xs text-red-400 font-bold">
-            DEGEN MODE
-          </div>
-        )}
-      </div>
       
       <div className="pt-32 pb-16">
         <div className="container mx-auto px-6">
@@ -154,7 +145,7 @@ const UIUXPortfolio = () => {
                         <span className="text-xs font-medium text-primary/80 bg-primary/10 px-3 py-1 rounded-full">
                           {project.category}
                         </span>
-                        {project.websiteUrl && (
+                        {project.websiteUrl && !isDegenMode && (
                           <a 
                             href={project.websiteUrl} 
                             target="_blank" 
@@ -211,32 +202,6 @@ const UIUXPortfolio = () => {
         </div>
       </div>
 
-      {/* Degen Code Input Dialog */}
-      <Dialog open={showDegenInput} onOpenChange={setShowDegenInput}>
-        <DialogContent className="bg-background border-white/10">
-          <DialogHeader>
-            <DialogTitle className="text-white">Enter Degen Code</DialogTitle>
-          </DialogHeader>
-          <div className="space-y-4">
-            <Input
-              type="password"
-              placeholder="Enter code..."
-              value={degenCode}
-              onChange={(e) => setDegenCode(e.target.value)}
-              className="bg-background/50 border-white/20 text-white"
-            />
-            <div className="flex gap-2">
-              <Button onClick={handleDegenCodeSubmit} className="flex-1">
-                Activate Degen Mode
-              </Button>
-              <Button onClick={() => setShowDegenInput(false)} variant="outline" className="flex-1">
-                Cancel
-              </Button>
-            </div>
-          </div>
-        </DialogContent>
-      </Dialog>
-
       {/* Edit Project Dialog */}
       <Dialog open={editingCard !== null} onOpenChange={() => cancelEdit()}>
         <DialogContent className="bg-background border-white/10 max-w-2xl">
@@ -271,7 +236,7 @@ const UIUXPortfolio = () => {
               />
             </div>
             <div>
-              <label className="text-white/80 text-sm mb-2 block">Website URL</label>
+              <label className="text-white/80 text-sm mb-2 block">Website/Project URL</label>
               <Input
                 value={newWebsiteUrl}
                 onChange={(e) => setNewWebsiteUrl(e.target.value)}
