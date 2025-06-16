@@ -1,36 +1,36 @@
 
 import { Card } from "@/components/ui/card";
-import { Palette, Zap, Monitor, Layers } from "lucide-react";
+import { Monitor, Package, TrendingUp, Image } from "lucide-react";
 
 const Services = () => {
   const services = [
     {
-      icon: Palette,
-      title: "Brand Identity",
-      description: "Complete visual systems that tell your story with precision and impact.",
-      features: ["Logo Design", "Brand Guidelines", "Visual Systems", "Color Palettes"],
-      price: "From $500"
-    },
-    {
-      icon: Zap,
-      title: "Digital Assets",
-      description: "High-conversion visuals designed to capture attention and drive results.",
-      features: ["PNL Graphics", "Social Media", "Campaign Assets", "Marketing Materials"],
-      price: "From $150"
-    },
-    {
       icon: Monitor,
-      title: "UI/UX Design",
+      title: "UI/UX",
       description: "User experiences that balance beautiful aesthetics with flawless functionality.",
       features: ["Web Design", "Mobile UI", "Prototypes", "User Research"],
       price: "From $800"
     },
     {
-      icon: Layers,
-      title: "Custom Projects",
-      description: "Tailored design solutions for unique challenges and creative visions.",
-      features: ["Consultation", "Custom Work", "Ongoing Support", "Revisions"],
-      price: "Contact"
+      icon: Package,
+      title: "Graphics Packs",
+      description: "Complete visual packages for brands and campaigns with consistent design systems.",
+      features: ["Brand Packages", "Social Media Kits", "Marketing Materials", "Visual Guidelines"],
+      price: "From $300"
+    },
+    {
+      icon: TrendingUp,
+      title: "PNL's",
+      description: "Profit & loss visualizations for trading communities that clearly communicate performance.",
+      features: ["Trading Results", "Performance Charts", "Portfolio Graphics", "Social Shares"],
+      price: "From $50"
+    },
+    {
+      icon: Image,
+      title: "Banners",
+      description: "Eye-catching banner designs for web and social media campaigns that convert.",
+      features: ["Web Banners", "Social Media", "Display Ads", "Campaign Assets"],
+      price: "From $150"
     }
   ];
 
