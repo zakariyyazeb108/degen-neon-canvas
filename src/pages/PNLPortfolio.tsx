@@ -1,7 +1,7 @@
 
 import { useState, useEffect } from "react";
 import { Card } from "@/components/ui/card";
-import { ArrowLeft, ExternalLink, Upload } from "lucide-react";
+import { ArrowLeft, ExternalLink, Upload, Trash2 } from "lucide-react";
 import { Link } from "react-router-dom";
 import Navigation from "@/components/Navigation";
 import CustomCursor from "@/components/CustomCursor";
@@ -82,6 +82,10 @@ const PNLPortfolio = () => {
     }]);
   };
 
+  const deleteGraphic = (graphicId: number) => {
+    setPnlGraphics(pnlGraphics.filter(graphic => graphic.id !== graphicId));
+  };
+
   return (
     <div className="min-h-screen bg-background text-foreground">
       <CustomCursor />
@@ -119,9 +123,23 @@ const PNLPortfolio = () => {
               {pnlGraphics.map((graphic, index) => (
                 <Card 
                   key={graphic.id} 
-                  className="premium-card group overflow-hidden"
+                  className="premium-card group overflow-hidden relative"
                   style={{ animationDelay: `${index * 0.1}s` }}
                 >
+                  {/* Delete Button (Degen Mode) */}
+                  {isDegenMode && (
+                    <Button
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        deleteGraphic(graphic.id);
+                      }}
+                      className="absolute top-2 right-2 z-10 bg-red-500/80 hover:bg-red-500 text-white p-2 h-8 w-8 opacity-0 group-hover:opacity-100 transition-opacity"
+                      size="sm"
+                    >
+                      <Trash2 className="w-3 h-3" />
+                    </Button>
+                  )}
+
                   <div className="relative">
                     {/* Graphic Image */}
                     {graphic.image ? (

@@ -1,7 +1,7 @@
 
 import { useState, useEffect } from "react";
 import { Card } from "@/components/ui/card";
-import { ArrowLeft, Upload, ExternalLink } from "lucide-react";
+import { ArrowLeft, Upload, ExternalLink, Trash2 } from "lucide-react";
 import { Link } from "react-router-dom";
 import Navigation from "@/components/Navigation";
 import CustomCursor from "@/components/CustomCursor";
@@ -87,6 +87,10 @@ const UIUXPortfolio = () => {
     }]);
   };
 
+  const deleteProject = (projectId: number) => {
+    setProjects(projects.filter(project => project.id !== projectId));
+  };
+
   return (
     <div className="min-h-screen bg-background text-foreground">
       <CustomCursor />
@@ -124,18 +128,49 @@ const UIUXPortfolio = () => {
               {projects.map((project, index) => (
                 <Card 
                   key={project.id} 
-                  className="premium-card group overflow-hidden"
+                  className="premium-card group overflow-hidden relative"
                   style={{ animationDelay: `${index * 0.1}s` }}
                 >
+                  {/* Delete Button (Degen Mode) */}
+                  {isDegenMode && (
+                    <Button
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        deleteProject(project.id);
+                      }}
+                      className="absolute top-2 right-2 z-10 bg-red-500/80 hover:bg-red-500 text-white p-2 h-8 w-8 opacity-0 group-hover:opacity-100 transition-opacity"
+                      size="sm"
+                    >
+                      <Trash2 className="w-3 h-3" />
+                    </Button>
+                  )}
+
                   <div className="relative">
                     {/* Project Image */}
-                    {project.image && (
+                    {project.image ? (
                       <div className="aspect-video overflow-hidden">
                         <img 
                           src={project.image} 
                           alt={project.title}
                           className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
                         />
+                      </div>
+                    ) : (
+                      <div className="aspect-video bg-gray-800 flex items-center justify-center">
+                        <span className="text-gray-400">No image</span>
+                      </div>
+                    )}
+
+                    {/* Degen Mode Edit Button */}
+                    {isDegenMode && (
+                      <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
+                        <Button
+                          onClick={() => startEditing(project)}
+                          className="bg-red-500 hover:bg-red-600"
+                        >
+                          <Upload className="w-4 h-4 mr-2" />
+                          Edit Content
+                        </Button>
                       </div>
                     )}
                     
@@ -165,16 +200,16 @@ const UIUXPortfolio = () => {
                         {project.description}
                       </p>
 
-                      {/* Degen Mode Edit Button */}
-                      {isDegenMode && (
-                        <Button
-                          onClick={() => startEditing(project)}
-                          className="w-full bg-red-500 hover:bg-red-600"
-                          size="sm"
+                      {/* Website Link Display */}
+                      {project.websiteUrl && (
+                        <a 
+                          href={project.websiteUrl} 
+                          target="_blank" 
+                          rel="noopener noreferrer"
+                          className="text-primary/80 hover:text-primary text-sm flex items-center gap-1 transition-colors"
                         >
-                          <Upload className="w-4 h-4 mr-2" />
-                          Edit Project
-                        </Button>
+                          Visit Website <ExternalLink className="w-3 h-3" />
+                        </a>
                       )}
                     </div>
                   </div>
