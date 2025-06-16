@@ -15,14 +15,13 @@ const Hero = () => {
           {/* Main heading with enhanced animations */}
           <div className="relative">
             <h1 className="text-6xl md:text-8xl font-light leading-tight mb-6 text-balance">
-              <span className="block text-white/90 animate-fade-in-up [animation-delay:0.2s] [animation-fill-mode:forwards] opacity-0 -mb-2">
+              <span className="block text-white/90 animate-fade-in-up [animation-delay:0.2s] [animation-fill-mode:forwards] opacity-0 -mb-4">
                 Creative
               </span>
-              <span className="block gradient-text-animated font-medium relative opacity-100 leading-relaxed pb-2">
+              <span className="block gradient-text-animated font-medium relative opacity-100 leading-relaxed">
                 <span className="inline-block">
                   Designer
                 </span>
-                <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent transform -skew-x-12 -translate-x-full animate-shine [animation-delay:1.5s]"></div>
               </span>
             </h1>
             
