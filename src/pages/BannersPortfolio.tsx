@@ -1,11 +1,15 @@
 
 import { useState } from "react";
 import { Card } from "@/components/ui/card";
-import { ArrowLeft, ExternalLink } from "lucide-react";
+import { ArrowLeft, ExternalLink, Cog, Upload, X } from "lucide-react";
 import { Link } from "react-router-dom";
 import Navigation from "@/components/Navigation";
 import CustomCursor from "@/components/CustomCursor";
 import ImageViewer from "@/components/ImageViewer";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { Textarea } from "@/components/ui/textarea";
 
 const BannersPortfolio = () => {
   const [selectedImage, setSelectedImage] = useState<{
@@ -16,7 +20,15 @@ const BannersPortfolio = () => {
     category: string;
   } | null>(null);
 
-  const banners = [
+  const [showDegenInput, setShowDegenInput] = useState(false);
+  const [degenCode, setDegenCode] = useState("");
+  const [isDegenMode, setIsDegenMode] = useState(false);
+  const [editingCard, setEditingCard] = useState<number | null>(null);
+  const [newTitle, setNewTitle] = useState("");
+  const [newDescription, setNewDescription] = useState("");
+  const [newImage, setNewImage] = useState("");
+
+  const [banners, setBanners] = useState([
     {
       id: 1,
       title: "WealthCord",
@@ -26,7 +38,7 @@ const BannersPortfolio = () => {
     },
     {
       id: 2,
-      title: "Virality",
+      title: "Viralify",
       description: "Credit card payment app with glassmorphism design elements",
       image: "/lovable-uploads/c499cbcc-72b1-4929-84cf-d9c70792f6ea.png",
       category: "Fintech"
@@ -52,9 +64,21 @@ const BannersPortfolio = () => {
       image: "/lovable-uploads/a34c31fb-1b4e-4205-997b-eb653d12f542.png",
       category: "Mobile App"
     }
-  ];
+  ]);
+
+  const handleDegenCodeSubmit = () => {
+    if (degenCode === "DegenDesigns+123") {
+      setIsDegenMode(true);
+      setShowDegenInput(false);
+      setDegenCode("");
+    } else {
+      alert("Incorrect code! Try again.");
+      setDegenCode("");
+    }
+  };
 
   const openImageViewer = (banner: typeof banners[0]) => {
+    if (isDegenMode) return; // Don't open viewer in degen mode
     setSelectedImage({
       src: banner.image,
       alt: banner.title,
@@ -68,10 +92,50 @@ const BannersPortfolio = () => {
     setSelectedImage(null);
   };
 
+  const startEditing = (banner: typeof banners[0]) => {
+    setEditingCard(banner.id);
+    setNewTitle(banner.title);
+    setNewDescription(banner.description);
+    setNewImage(banner.image);
+  };
+
+  const saveEdit = () => {
+    setBanners(banners.map(banner => 
+      banner.id === editingCard 
+        ? { ...banner, title: newTitle, description: newDescription, image: newImage }
+        : banner
+    ));
+    setEditingCard(null);
+  };
+
+  const cancelEdit = () => {
+    setEditingCard(null);
+    setNewTitle("");
+    setNewDescription("");
+    setNewImage("");
+  };
+
   return (
     <div className="min-h-screen bg-background text-foreground">
       <CustomCursor />
       <Navigation />
+      
+      {/* Degen Mode Toggle */}
+      <div className="fixed top-24 right-6 z-40">
+        <Button
+          onClick={() => isDegenMode ? setIsDegenMode(false) : setShowDegenInput(true)}
+          variant={isDegenMode ? "default" : "outline"}
+          size="icon"
+          className={isDegenMode ? "bg-red-500 hover:bg-red-600" : ""}
+        >
+          <Cog className="h-4 w-4" />
+        </Button>
+        {isDegenMode && (
+          <div className="absolute top-12 right-0 text-xs text-red-400 font-bold">
+            DEGEN MODE
+          </div>
+        )}
+      </div>
       
       <div className="pt-32 pb-16">
         <div className="container mx-auto px-6">
@@ -94,9 +158,9 @@ const BannersPortfolio = () => {
             {banners.map((banner, index) => (
               <Card 
                 key={banner.id} 
-                className="premium-card group overflow-hidden cursor-pointer"
+                className={`premium-card group overflow-hidden ${!isDegenMode ? 'cursor-pointer' : ''}`}
                 style={{ animationDelay: `${index * 0.1}s` }}
-                onClick={() => openImageViewer(banner)}
+                onClick={() => !isDegenMode && openImageViewer(banner)}
               >
                 <div className="relative">
                   {/* Banner Image */}
@@ -108,9 +172,24 @@ const BannersPortfolio = () => {
                     />
                     
                     {/* Overlay */}
-                    <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
-                      <ExternalLink className="w-8 h-8 text-white" />
-                    </div>
+                    {!isDegenMode && (
+                      <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
+                        <ExternalLink className="w-8 h-8 text-white" />
+                      </div>
+                    )}
+
+                    {/* Degen Mode Edit Button */}
+                    {isDegenMode && (
+                      <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
+                        <Button
+                          onClick={() => startEditing(banner)}
+                          className="bg-red-500 hover:bg-red-600"
+                        >
+                          <Upload className="w-4 h-4 mr-2" />
+                          Edit Content
+                        </Button>
+                      </div>
+                    )}
                   </div>
                   
                   {/* Content */}
@@ -157,6 +236,77 @@ const BannersPortfolio = () => {
           </div>
         </div>
       </div>
+
+      {/* Degen Code Input Dialog */}
+      <Dialog open={showDegenInput} onOpenChange={setShowDegenInput}>
+        <DialogContent className="bg-background border-white/10">
+          <DialogHeader>
+            <DialogTitle className="text-white">Enter Degen Code</DialogTitle>
+          </DialogHeader>
+          <div className="space-y-4">
+            <Input
+              type="password"
+              placeholder="Enter code..."
+              value={degenCode}
+              onChange={(e) => setDegenCode(e.target.value)}
+              className="bg-background/50 border-white/20 text-white"
+            />
+            <div className="flex gap-2">
+              <Button onClick={handleDegenCodeSubmit} className="flex-1">
+                Activate Degen Mode
+              </Button>
+              <Button onClick={() => setShowDegenInput(false)} variant="outline" className="flex-1">
+                Cancel
+              </Button>
+            </div>
+          </div>
+        </DialogContent>
+      </Dialog>
+
+      {/* Edit Card Dialog */}
+      <Dialog open={editingCard !== null} onOpenChange={() => cancelEdit()}>
+        <DialogContent className="bg-background border-white/10 max-w-2xl">
+          <DialogHeader>
+            <DialogTitle className="text-white">Edit Card Content</DialogTitle>
+          </DialogHeader>
+          <div className="space-y-4">
+            <div>
+              <label className="text-white/80 text-sm mb-2 block">Title</label>
+              <Input
+                value={newTitle}
+                onChange={(e) => setNewTitle(e.target.value)}
+                className="bg-background/50 border-white/20 text-white"
+              />
+            </div>
+            <div>
+              <label className="text-white/80 text-sm mb-2 block">Description</label>
+              <Textarea
+                value={newDescription}
+                onChange={(e) => setNewDescription(e.target.value)}
+                className="bg-background/50 border-white/20 text-white"
+                rows={3}
+              />
+            </div>
+            <div>
+              <label className="text-white/80 text-sm mb-2 block">Image URL</label>
+              <Input
+                value={newImage}
+                onChange={(e) => setNewImage(e.target.value)}
+                className="bg-background/50 border-white/20 text-white"
+                placeholder="Enter image URL..."
+              />
+            </div>
+            <div className="flex gap-2">
+              <Button onClick={saveEdit} className="flex-1 bg-red-500 hover:bg-red-600">
+                Save Changes
+              </Button>
+              <Button onClick={cancelEdit} variant="outline" className="flex-1">
+                Cancel
+              </Button>
+            </div>
+          </div>
+        </DialogContent>
+      </Dialog>
 
       {/* Image Viewer Modal */}
       {selectedImage && (

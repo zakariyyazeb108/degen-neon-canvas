@@ -23,13 +23,16 @@ const ImageViewer = ({
 }: ImageViewerProps) => {
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="max-w-4xl w-full p-0 bg-background/95 backdrop-blur-sm border-white/10">
+      <DialogContent className="max-w-4xl w-full p-0 bg-background/95 backdrop-blur-sm border-white/10 [&>button]:hidden">
         <div className="relative">
-          {/* Close button */}
-          <DialogClose className="absolute right-4 top-4 z-10 rounded-sm opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 bg-black/50 p-2">
+          {/* Custom Close button */}
+          <button
+            onClick={onClose}
+            className="absolute right-4 top-4 z-10 rounded-sm opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 bg-black/50 p-2"
+          >
             <X className="h-4 w-4 text-white" />
             <span className="sr-only">Close</span>
-          </DialogClose>
+          </button>
           
           {/* Image */}
           <div className="relative">
