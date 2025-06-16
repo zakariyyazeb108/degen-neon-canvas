@@ -42,13 +42,6 @@ const BannersPortfolio = () => {
       description: "Financial app promotion with mobile-first design approach",
       image: "/lovable-uploads/a34c31fb-1b4e-4205-997b-eb653d12f542.png",
       category: "Mobile App"
-    },
-    {
-      id: 6,
-      title: "Cash Club Duplicate",
-      description: "Alternative version of the trading education platform banner",
-      image: "/lovable-uploads/63b63796-9613-4289-aab7-e27542cc5cc5.png",
-      category: "Education"
     }
   ];
 
@@ -121,7 +114,7 @@ const BannersPortfolio = () => {
           <div className="mt-20 text-center">
             <div className="grid grid-cols-2 md:grid-cols-4 gap-8 max-w-3xl mx-auto">
               <div>
-                <div className="text-3xl font-bold gradient-text mb-2">25+</div>
+                <div className="text-3xl font-bold gradient-text mb-2">20+</div>
                 <div className="text-white/60 text-sm">Banner Designs</div>
               </div>
               <div>
