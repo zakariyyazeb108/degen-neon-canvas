@@ -91,6 +91,8 @@ const UIUXPortfolio = () => {
     setProjects(projects.filter(project => project.id !== projectId));
   };
 
+  const hasRealContent = projects.length > 1 || (projects.length === 1 && projects[0].title !== "Coming Soon");
+
   return (
     <div className="min-h-screen bg-background text-foreground">
       <CustomCursor />
@@ -123,9 +125,9 @@ const UIUXPortfolio = () => {
           )}
 
           {/* Projects Grid */}
-          {projects.length > 0 && projects[0].title !== "Coming Soon" ? (
+          {hasRealContent ? (
             <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-              {projects.map((project, index) => (
+              {projects.filter(project => project.title !== "Coming Soon").map((project, index) => (
                 <Card 
                   key={project.id} 
                   className="premium-card group overflow-hidden relative"

@@ -86,6 +86,8 @@ const PNLPortfolio = () => {
     setPnlGraphics(pnlGraphics.filter(graphic => graphic.id !== graphicId));
   };
 
+  const hasRealContent = pnlGraphics.length > 1 || (pnlGraphics.length === 1 && pnlGraphics[0].title !== "Coming Soon");
+
   return (
     <div className="min-h-screen bg-background text-foreground">
       <CustomCursor />
@@ -118,9 +120,9 @@ const PNLPortfolio = () => {
           )}
 
           {/* Graphics Grid or Empty State */}
-          {pnlGraphics.length > 0 && pnlGraphics[0].title !== "Coming Soon" ? (
+          {hasRealContent ? (
             <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-              {pnlGraphics.map((graphic, index) => (
+              {pnlGraphics.filter(graphic => graphic.title !== "Coming Soon").map((graphic, index) => (
                 <Card 
                   key={graphic.id} 
                   className="premium-card group overflow-hidden relative"

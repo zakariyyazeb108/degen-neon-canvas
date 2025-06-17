@@ -86,6 +86,8 @@ const GraphicsPortfolio = () => {
     setGraphicsPacks(graphicsPacks.filter(pack => pack.id !== packId));
   };
 
+  const hasRealContent = graphicsPacks.length > 1 || (graphicsPacks.length === 1 && graphicsPacks[0].title !== "Coming Soon");
+
   return (
     <div className="min-h-screen bg-background text-foreground">
       <CustomCursor />
@@ -118,9 +120,9 @@ const GraphicsPortfolio = () => {
           )}
 
           {/* Graphics Packs Grid or Empty State */}
-          {graphicsPacks.length > 0 && graphicsPacks[0].title !== "Coming Soon" ? (
+          {hasRealContent ? (
             <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-              {graphicsPacks.map((pack, index) => (
+              {graphicsPacks.filter(pack => pack.title !== "Coming Soon").map((pack, index) => (
                 <Card 
                   key={pack.id} 
                   className="premium-card group overflow-hidden relative"

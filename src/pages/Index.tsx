@@ -52,8 +52,8 @@ const Index = () => {
       <ParticleBackground />
       <CustomCursor />
       
-      {/* Subtle Degen Mode Toggle - Less intrusive */}
-      <div className="fixed bottom-6 right-6 z-50">
+      {/* Degen Mode Toggle - Positioned to avoid overlap with ScrollToTop */}
+      <div className="fixed bottom-6 left-6 z-50">
         <Button
           onClick={toggleDegenMode}
           variant="ghost"
