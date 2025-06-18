@@ -1,3 +1,4 @@
+
 import { Card } from "@/components/ui/card";
 import { Monitor, Package, TrendingUp, Image } from "lucide-react";
 
@@ -7,29 +8,25 @@ const Services = () => {
       icon: Monitor,
       title: "UI/UX",
       description: "User experiences that balance beautiful aesthetics with flawless functionality.",
-      features: ["Web Design", "Mobile UI", "Prototypes", "User Research"],
-      price: "$800"
+      features: ["Web Design", "Mobile UI", "Prototypes", "User Research"]
     },
     {
       icon: Package,
       title: "Graphics Packs",
       description: "Complete visual packages for brands and campaigns with consistent design systems.",
-      features: ["Brand Packages", "Social Media Kits", "Marketing Materials", "Visual Guidelines"],
-      price: "$300"
+      features: ["Brand Packages", "Social Media Kits", "Marketing Materials", "Visual Guidelines"]
     },
     {
       icon: TrendingUp,
       title: "PNL's",
       description: "Profit & loss visualizations for trading communities that clearly communicate performance.",
-      features: ["Trading Results", "Performance Charts", "Portfolio Graphics", "Social Shares"],
-      price: "$50"
+      features: ["Trading Results", "Performance Charts", "Portfolio Graphics", "Social Shares"]
     },
     {
       icon: Image,
       title: "Banners",
       description: "Eye-catching banner designs for web and social media campaigns that convert.",
-      features: ["Web Banners", "Social Media", "Display Ads", "Campaign Assets"],
-      price: "$50"
+      features: ["Web Banners", "Social Media", "Display Ads", "Campaign Assets"]
     }
   ];
 
@@ -50,12 +47,9 @@ const Services = () => {
             <div key={service.title}>
               <Card className="premium-card p-8 h-full group">
                 <div className="space-y-6">
-                  {/* Icon & Price */}
-                  <div className="flex items-start justify-between">
-                    <div className="inline-flex p-4 rounded-2xl bg-gradient-to-br from-blue-500/10 to-blue-400/5 border border-blue-400/20">
-                      <service.icon className="w-8 h-8 text-blue-400" />
-                    </div>
-                    <span className="text-blue-400 font-medium text-sm">{service.price}</span>
+                  {/* Icon */}
+                  <div className="inline-flex p-4 rounded-2xl bg-gradient-to-br from-blue-500/10 to-blue-400/5 border border-blue-400/20">
+                    <service.icon className="w-8 h-8 text-blue-400" />
                   </div>
                   
                   {/* Content */}
