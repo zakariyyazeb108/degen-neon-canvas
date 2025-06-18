@@ -8,6 +8,13 @@ export const useSimpleDegenMode = () => {
   const [isDegenMode, setIsDegenMode] = useState(false);
   const [loading, setLoading] = useState(false);
 
+  // Get client IP for security tracking
+  const getClientIP = () => {
+    // In a real implementation, you might get this from a header or service
+    // For now, we'll use a placeholder
+    return 'client_browser';
+  };
+
   // Check degen mode status on load by validating the stored session token
   useEffect(() => {
     const validateStoredSession = async () => {
@@ -18,8 +25,11 @@ export const useSimpleDegenMode = () => {
       }
 
       try {
-        const { data, error } = await supabase.rpc('validate_degen_session_secure', {
-          session_token: storedToken
+        // Use the enhanced validation function
+        const { data, error } = await supabase.rpc('validate_degen_session_advanced', {
+          session_token: storedToken,
+          client_ip: getClientIP(),
+          user_agent_header: navigator.userAgent
         });
 
         if (error) {
@@ -29,9 +39,14 @@ export const useSimpleDegenMode = () => {
           return;
         }
 
-        // Check if we got a valid result
+        // Check if we got a valid result with enhanced security info
         if (data && data.length > 0 && data[0].is_valid) {
           setIsDegenMode(true);
+          
+          // Log security level if it's low
+          if (data[0].security_level === 'low') {
+            console.warn('Session validated but with low security score');
+          }
         } else {
           localStorage.removeItem('simple_degen_session_token');
           setIsDegenMode(false);
@@ -48,6 +63,15 @@ export const useSimpleDegenMode = () => {
 
   const activateDegenMode = async (code: string): Promise<boolean> => {
     if (code !== "DegenDesigns+123") {
+      // Record failed attempt for rate limiting
+      try {
+        await supabase.rpc('record_failed_attempt', {
+          client_ip: getClientIP()
+        });
+      } catch (error) {
+        console.error('Failed to record attempt:', error);
+      }
+
       toast({
         title: "Invalid Code",
         description: "The code you entered is incorrect",
@@ -59,6 +83,22 @@ export const useSimpleDegenMode = () => {
     setLoading(true);
 
     try {
+      // Check rate limiting before proceeding
+      const { data: rateLimitData, error: rateLimitError } = await supabase.rpc('check_rate_limit', {
+        client_ip: getClientIP()
+      });
+
+      if (rateLimitError) {
+        console.error('Rate limit check error:', rateLimitError);
+      } else if (rateLimitData && rateLimitData.length > 0 && rateLimitData[0].is_blocked) {
+        toast({
+          title: "Too Many Attempts",
+          description: "Please wait before trying again due to multiple failed attempts",
+          variant: "destructive"
+        });
+        return false;
+      }
+
       // Create anonymous session with Supabase
       const { data: authData, error: authError } = await supabase.auth.signInAnonymously();
       
@@ -72,7 +112,7 @@ export const useSimpleDegenMode = () => {
         return false;
       }
 
-      // Create secure degen session using the new function
+      // Create secure degen session using the enhanced function
       const { data: sessionData, error: sessionError } = await supabase.rpc('create_degen_session', {
         p_user_id: authData.user.id
       });
@@ -102,6 +142,16 @@ export const useSimpleDegenMode = () => {
       return true;
     } catch (error) {
       console.error('Error activating degen mode:', error);
+      
+      // Record failed attempt
+      try {
+        await supabase.rpc('record_failed_attempt', {
+          client_ip: getClientIP()
+        });
+      } catch (attemptError) {
+        console.error('Failed to record attempt:', attemptError);
+      }
+
       toast({
         title: "Error",
         description: "Failed to activate Degen Mode",
@@ -144,9 +194,11 @@ export const useSimpleDegenMode = () => {
       const storedToken = localStorage.getItem('simple_degen_session_token');
       if (!storedToken) return;
 
-      // Validate session before logging
-      const { data: validationData } = await supabase.rpc('validate_degen_session_secure', {
-        session_token: storedToken
+      // Validate session before logging using enhanced validation
+      const { data: validationData } = await supabase.rpc('validate_degen_session_advanced', {
+        session_token: storedToken,
+        client_ip: getClientIP(),
+        user_agent_header: navigator.userAgent
       });
 
       if (!validationData || validationData.length === 0 || !validationData[0].is_valid) {
@@ -155,6 +207,7 @@ export const useSimpleDegenMode = () => {
       }
 
       const userId = validationData[0].user_id;
+      const securityLevel = validationData[0].security_level;
       
       await supabase
         .from('upload_logs')
@@ -163,9 +216,16 @@ export const useSimpleDegenMode = () => {
           action,
           item_type: itemType,
           item_id: itemId,
-          item_data: itemData,
+          item_data: {
+            ...itemData,
+            security_level: securityLevel,
+            client_info: {
+              ip: getClientIP(),
+              user_agent: navigator.userAgent
+            }
+          },
           session_token: storedToken,
-          ip_address: 'client_side',
+          ip_address: getClientIP(),
           user_agent: navigator.userAgent
         });
     } catch (error) {

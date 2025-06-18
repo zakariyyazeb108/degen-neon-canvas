@@ -78,6 +78,33 @@ export type Database = {
         }
         Relationships: []
       }
+      session_attempts: {
+        Row: {
+          attempt_count: number
+          blocked_until: string | null
+          created_at: string
+          id: string
+          ip_address: string
+          last_attempt: string
+        }
+        Insert: {
+          attempt_count?: number
+          blocked_until?: string | null
+          created_at?: string
+          id?: string
+          ip_address: string
+          last_attempt?: string
+        }
+        Update: {
+          attempt_count?: number
+          blocked_until?: string | null
+          created_at?: string
+          id?: string
+          ip_address?: string
+          last_attempt?: string
+        }
+        Relationships: []
+      }
       upload_logs: {
         Row: {
           action: string
@@ -126,6 +153,13 @@ export type Database = {
         Args: { user_id: string }
         Returns: boolean
       }
+      check_rate_limit: {
+        Args: { client_ip: string }
+        Returns: {
+          is_blocked: boolean
+          remaining_attempts: number
+        }[]
+      }
       create_degen_session: {
         Args: { p_user_id: string }
         Returns: {
@@ -137,11 +171,27 @@ export type Database = {
         Args: Record<PropertyKey, never>
         Returns: string
       }
+      record_failed_attempt: {
+        Args: { client_ip: string }
+        Returns: undefined
+      }
       validate_degen_session: {
         Args: { session_token: string }
         Returns: {
           user_id: string
           is_valid: boolean
+        }[]
+      }
+      validate_degen_session_advanced: {
+        Args: {
+          session_token: string
+          client_ip?: string
+          user_agent_header?: string
+        }
+        Returns: {
+          is_valid: boolean
+          user_id: string
+          security_level: string
         }[]
       }
       validate_degen_session_secure: {
