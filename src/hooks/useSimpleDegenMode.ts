@@ -8,14 +8,42 @@ export const useSimpleDegenMode = () => {
   const [isDegenMode, setIsDegenMode] = useState(false);
   const [loading, setLoading] = useState(false);
 
-  // Check degen mode status on load
+  // Check degen mode status on load by validating the stored session token
   useEffect(() => {
-    const checkDegenStatus = () => {
-      const degenSession = localStorage.getItem('simple_degen_session');
-      setIsDegenMode(!!degenSession);
+    const validateStoredSession = async () => {
+      const storedToken = localStorage.getItem('simple_degen_session_token');
+      if (!storedToken) {
+        setIsDegenMode(false);
+        return;
+      }
+
+      try {
+        const { data, error } = await supabase.rpc('validate_degen_session_secure', {
+          session_token: storedToken
+        });
+
+        if (error) {
+          console.error('Session validation error:', error);
+          localStorage.removeItem('simple_degen_session_token');
+          setIsDegenMode(false);
+          return;
+        }
+
+        // Check if we got a valid result
+        if (data && data.length > 0 && data[0].is_valid) {
+          setIsDegenMode(true);
+        } else {
+          localStorage.removeItem('simple_degen_session_token');
+          setIsDegenMode(false);
+        }
+      } catch (error) {
+        console.error('Session validation failed:', error);
+        localStorage.removeItem('simple_degen_session_token');
+        setIsDegenMode(false);
+      }
     };
 
-    checkDegenStatus();
+    validateStoredSession();
   }, []);
 
   const activateDegenMode = async (code: string): Promise<boolean> => {
@@ -31,46 +59,44 @@ export const useSimpleDegenMode = () => {
     setLoading(true);
 
     try {
-      // Create anonymous session with Supabase for logging
+      // Create anonymous session with Supabase
       const { data: authData, error: authError } = await supabase.auth.signInAnonymously();
       
-      if (authError) {
+      if (authError || !authData?.user) {
         console.error('Auth error:', authError);
-        // Continue anyway - auth is just for logging
+        toast({
+          title: "Authentication Error",
+          description: "Failed to create secure session",
+          variant: "destructive"
+        });
+        return false;
       }
 
-      // Create simple session token
-      const sessionToken = crypto.randomUUID();
-      const timestamp = new Date().toISOString();
+      // Create secure degen session using the new function
+      const { data: sessionData, error: sessionError } = await supabase.rpc('create_degen_session', {
+        p_user_id: authData.user.id
+      });
+
+      if (sessionError || !sessionData || sessionData.length === 0) {
+        console.error('Session creation error:', sessionError);
+        toast({
+          title: "Error",
+          description: "Failed to create secure session",
+          variant: "destructive"
+        });
+        return false;
+      }
+
+      const { session_token } = sessionData[0];
       
-      // Store session data
-      localStorage.setItem('simple_degen_session', JSON.stringify({
-        token: sessionToken,
-        activated_at: timestamp,
-        user_agent: navigator.userAgent
-      }));
-
-      // Try to log the activation (optional)
-      if (authData?.user) {
-        try {
-          await supabase
-            .from('degen_sessions')
-            .insert({
-              user_id: authData.user.id,
-              session_token: sessionToken,
-              ip_address: 'client_side',
-              user_agent: navigator.userAgent
-            });
-        } catch (logError) {
-          console.log('Logging failed (non-critical):', logError);
-        }
-      }
+      // Store only the session token (not the full session data)
+      localStorage.setItem('simple_degen_session_token', session_token);
 
       setIsDegenMode(true);
       
       toast({
         title: "Degen Mode Activated",
-        description: "You can now upload and manage content",
+        description: "You can now upload and manage content securely",
       });
 
       return true;
@@ -87,8 +113,22 @@ export const useSimpleDegenMode = () => {
     }
   };
 
-  const deactivateDegenMode = () => {
-    localStorage.removeItem('simple_degen_session');
+  const deactivateDegenMode = async () => {
+    const storedToken = localStorage.getItem('simple_degen_session_token');
+    
+    if (storedToken) {
+      try {
+        // Deactivate the session in the database
+        await supabase
+          .from('degen_sessions')
+          .update({ is_active: false })
+          .eq('session_token', storedToken);
+      } catch (error) {
+        console.error('Error deactivating session:', error);
+      }
+    }
+
+    localStorage.removeItem('simple_degen_session_token');
     setIsDegenMode(false);
     
     toast({
@@ -101,28 +141,33 @@ export const useSimpleDegenMode = () => {
     if (!isDegenMode) return;
 
     try {
-      const session = localStorage.getItem('simple_degen_session');
-      if (!session) return;
+      const storedToken = localStorage.getItem('simple_degen_session_token');
+      if (!storedToken) return;
 
-      const { token } = JSON.parse(session);
-      
-      // Get current user (might be anonymous)
-      const { data: { user } } = await supabase.auth.getUser();
-      
-      if (user) {
-        await supabase
-          .from('upload_logs')
-          .insert({
-            user_id: user.id,
-            action,
-            item_type: itemType,
-            item_id: itemId,
-            item_data: itemData,
-            session_token: token,
-            ip_address: 'client_side',
-            user_agent: navigator.userAgent
-          });
+      // Validate session before logging
+      const { data: validationData } = await supabase.rpc('validate_degen_session_secure', {
+        session_token: storedToken
+      });
+
+      if (!validationData || validationData.length === 0 || !validationData[0].is_valid) {
+        console.log('Invalid session for logging');
+        return;
       }
+
+      const userId = validationData[0].user_id;
+      
+      await supabase
+        .from('upload_logs')
+        .insert({
+          user_id: userId,
+          action,
+          item_type: itemType,
+          item_id: itemId,
+          item_data: itemData,
+          session_token: storedToken,
+          ip_address: 'client_side',
+          user_agent: navigator.userAgent
+        });
     } catch (error) {
       console.log('Upload logging failed (non-critical):', error);
     }

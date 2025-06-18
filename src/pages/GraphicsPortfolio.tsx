@@ -43,7 +43,7 @@ const GraphicsPortfolio = () => {
     );
     setGraphicsPacks(updatedPacks);
     
-    // Log the activity
+    // Log the activity with server-side validation
     await logUploadActivity('edit', 'graphics', editingCard!.toString(), {
       title: newTitle,
       description: newDescription,
@@ -72,7 +72,7 @@ const GraphicsPortfolio = () => {
     
     setGraphicsPacks([...graphicsPacks, newPack]);
     
-    // Log the activity
+    // Log the activity with server-side validation
     await logUploadActivity('upload', 'graphics', newId.toString(), newPack);
   };
 
@@ -80,7 +80,7 @@ const GraphicsPortfolio = () => {
     const packToDelete = graphicsPacks.find(p => p.id === packId);
     setGraphicsPacks(graphicsPacks.filter(pack => pack.id !== packId));
     
-    // Log the activity
+    // Log the activity with server-side validation
     if (packToDelete) {
       await logUploadActivity('delete', 'graphics', packId.toString(), packToDelete);
     }

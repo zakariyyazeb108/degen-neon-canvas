@@ -126,11 +126,29 @@ export type Database = {
         Args: { user_id: string }
         Returns: boolean
       }
+      create_degen_session: {
+        Args: { p_user_id: string }
+        Returns: {
+          session_token: string
+          expires_at: string
+        }[]
+      }
+      generate_secure_token: {
+        Args: Record<PropertyKey, never>
+        Returns: string
+      }
       validate_degen_session: {
         Args: { session_token: string }
         Returns: {
           user_id: string
           is_valid: boolean
+        }[]
+      }
+      validate_degen_session_secure: {
+        Args: { session_token: string }
+        Returns: {
+          is_valid: boolean
+          user_id: string
         }[]
       }
     }
