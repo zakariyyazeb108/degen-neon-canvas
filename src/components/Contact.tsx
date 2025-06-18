@@ -4,6 +4,10 @@ import { Card } from "@/components/ui/card";
 import { MessageCircle, Clock, DollarSign } from "lucide-react";
 
 const Contact = () => {
+  const handleDiscordClick = () => {
+    window.open('https://discord.gg/v7f2U4APgW', '_blank');
+  };
+
   const contactMethods = [
     {
       icon: MessageCircle,
@@ -69,7 +73,7 @@ const Contact = () => {
 
               <div className="space-y-4">
                 {contactMethods.map((method, index) => (
-                  <Card key={method.title} className="premium-card p-6 group cursor-pointer hover:border-blue-400/30">
+                  <Card key={method.title} className="premium-card p-6 group cursor-pointer hover:border-blue-400/30" onClick={handleDiscordClick}>
                     <div className="flex items-center space-x-4">
                       <div className="p-3 rounded-xl bg-gradient-to-br from-blue-500/10 to-blue-400/5 border border-blue-400/20">
                         <method.icon className="w-6 h-6 text-blue-400" />
@@ -137,7 +141,7 @@ const Contact = () => {
                 Join 25+ satisfied clients who've transformed their brands with premium design. 
                 Let's discuss how I can help you achieve your goals.
               </p>
-              <Button size="lg" className="premium-button px-12 py-6 text-lg">
+              <Button size="lg" className="premium-button px-12 py-6 text-lg" onClick={handleDiscordClick}>
                 Start Your Project Today
               </Button>
             </Card>

@@ -3,6 +3,10 @@ import MagneticButton from "./MagneticButton";
 import FloatingElements from "./FloatingElements";
 
 const Hero = () => {
+  const handleDiscordClick = () => {
+    window.open('https://discord.gg/v7f2U4APgW', '_blank');
+  };
+
   return (
     <section id="home" className="min-h-screen flex items-center justify-center relative overflow-hidden hero-gradient">
       <FloatingElements />
@@ -42,7 +46,10 @@ const Hero = () => {
           
           {/* CTA with premium styling and animation - increased bottom padding */}
           <div className="pt-8 pb-32 animate-fade-in-up [animation-delay:2s] [animation-fill-mode:forwards] opacity-0">
-            <MagneticButton className="premium-button text-white px-12 py-4 text-lg font-medium rounded-full">
+            <MagneticButton 
+              className="premium-button text-white px-12 py-4 text-lg font-medium rounded-full"
+              onClick={handleDiscordClick}
+            >
               Let's Create Together
             </MagneticButton>
           </div>
