@@ -9,9 +9,10 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Textarea } from "@/components/ui/textarea";
+import { useSimpleDegenMode } from "@/hooks/useSimpleDegenMode";
 
 const GraphicsPortfolio = () => {
-  const [isDegenMode, setIsDegenMode] = useState(false);
+  const { isDegenMode, logUploadActivity } = useSimpleDegenMode();
   const [editingCard, setEditingCard] = useState<number | null>(null);
   const [newTitle, setNewTitle] = useState("");
   const [newDescription, setNewDescription] = useState("");
@@ -27,27 +28,6 @@ const GraphicsPortfolio = () => {
     }
   ]);
 
-  // Check for Degen Mode from localStorage
-  useEffect(() => {
-    const checkDegenMode = () => {
-      const savedDegenMode = localStorage.getItem("degenMode");
-      setIsDegenMode(savedDegenMode === "true");
-    };
-
-    checkDegenMode();
-    
-    // Listen for storage changes
-    window.addEventListener('storage', checkDegenMode);
-    
-    // Also check periodically in case localStorage is updated on same tab
-    const interval = setInterval(checkDegenMode, 1000);
-
-    return () => {
-      window.removeEventListener('storage', checkDegenMode);
-      clearInterval(interval);
-    };
-  }, []);
-
   const startEditing = (pack: typeof graphicsPacks[0]) => {
     setEditingCard(pack.id);
     setNewTitle(pack.title);
@@ -55,12 +35,21 @@ const GraphicsPortfolio = () => {
     setNewImage(pack.image);
   };
 
-  const saveEdit = () => {
-    setGraphicsPacks(graphicsPacks.map(pack => 
+  const saveEdit = async () => {
+    const updatedPacks = graphicsPacks.map(pack => 
       pack.id === editingCard 
         ? { ...pack, title: newTitle, description: newDescription, image: newImage }
         : pack
-    ));
+    );
+    setGraphicsPacks(updatedPacks);
+    
+    // Log the activity
+    await logUploadActivity('edit', 'graphics', editingCard!.toString(), {
+      title: newTitle,
+      description: newDescription,
+      image: newImage
+    });
+    
     setEditingCard(null);
   };
 
@@ -71,19 +60,30 @@ const GraphicsPortfolio = () => {
     setNewImage("");
   };
 
-  const addNewPack = () => {
+  const addNewPack = async () => {
     const newId = Math.max(...graphicsPacks.map(p => p.id)) + 1;
-    setGraphicsPacks([...graphicsPacks, {
+    const newPack = {
       id: newId,
       title: "New Graphics Pack",
       description: "Add your graphics pack description",
       image: "",
       category: "Graphics Pack"
-    }]);
+    };
+    
+    setGraphicsPacks([...graphicsPacks, newPack]);
+    
+    // Log the activity
+    await logUploadActivity('upload', 'graphics', newId.toString(), newPack);
   };
 
-  const deletePack = (packId: number) => {
+  const deletePack = async (packId: number) => {
+    const packToDelete = graphicsPacks.find(p => p.id === packId);
     setGraphicsPacks(graphicsPacks.filter(pack => pack.id !== packId));
+    
+    // Log the activity
+    if (packToDelete) {
+      await logUploadActivity('delete', 'graphics', packId.toString(), packToDelete);
+    }
   };
 
   const hasRealContent = graphicsPacks.length > 1 || (graphicsPacks.length === 1 && graphicsPacks[0].title !== "Coming Soon");

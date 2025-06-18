@@ -9,9 +9,10 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Textarea } from "@/components/ui/textarea";
+import { useSimpleDegenMode } from "@/hooks/useSimpleDegenMode";
 
 const PNLPortfolio = () => {
-  const [isDegenMode, setIsDegenMode] = useState(false);
+  const { isDegenMode, logUploadActivity } = useSimpleDegenMode();
   const [editingCard, setEditingCard] = useState<number | null>(null);
   const [newTitle, setNewTitle] = useState("");
   const [newDescription, setNewDescription] = useState("");
@@ -27,27 +28,6 @@ const PNLPortfolio = () => {
     }
   ]);
 
-  // Check for Degen Mode from localStorage
-  useEffect(() => {
-    const checkDegenMode = () => {
-      const savedDegenMode = localStorage.getItem("degenMode");
-      setIsDegenMode(savedDegenMode === "true");
-    };
-
-    checkDegenMode();
-    
-    // Listen for storage changes
-    window.addEventListener('storage', checkDegenMode);
-    
-    // Also check periodically in case localStorage is updated on same tab
-    const interval = setInterval(checkDegenMode, 1000);
-
-    return () => {
-      window.removeEventListener('storage', checkDegenMode);
-      clearInterval(interval);
-    };
-  }, []);
-
   const startEditing = (graphic: typeof pnlGraphics[0]) => {
     setEditingCard(graphic.id);
     setNewTitle(graphic.title);
@@ -55,12 +35,21 @@ const PNLPortfolio = () => {
     setNewImage(graphic.image);
   };
 
-  const saveEdit = () => {
-    setPnlGraphics(pnlGraphics.map(graphic => 
+  const saveEdit = async () => {
+    const updatedGraphics = pnlGraphics.map(graphic => 
       graphic.id === editingCard 
         ? { ...graphic, title: newTitle, description: newDescription, image: newImage }
         : graphic
-    ));
+    );
+    setPnlGraphics(updatedGraphics);
+    
+    // Log the activity
+    await logUploadActivity('edit', 'pnl', editingCard!.toString(), {
+      title: newTitle,
+      description: newDescription,
+      image: newImage
+    });
+    
     setEditingCard(null);
   };
 
@@ -71,19 +60,30 @@ const PNLPortfolio = () => {
     setNewImage("");
   };
 
-  const addNewGraphic = () => {
+  const addNewGraphic = async () => {
     const newId = Math.max(...pnlGraphics.map(g => g.id)) + 1;
-    setPnlGraphics([...pnlGraphics, {
+    const newGraphic = {
       id: newId,
       title: "New PNL Graphic",
       description: "Add your PNL graphic description",
       image: "",
       category: "PNL"
-    }]);
+    };
+    
+    setPnlGraphics([...pnlGraphics, newGraphic]);
+    
+    // Log the activity
+    await logUploadActivity('upload', 'pnl', newId.toString(), newGraphic);
   };
 
-  const deleteGraphic = (graphicId: number) => {
+  const deleteGraphic = async (graphicId: number) => {
+    const graphicToDelete = pnlGraphics.find(g => g.id === graphicId);
     setPnlGraphics(pnlGraphics.filter(graphic => graphic.id !== graphicId));
+    
+    // Log the activity
+    if (graphicToDelete) {
+      await logUploadActivity('delete', 'pnl', graphicId.toString(), graphicToDelete);
+    }
   };
 
   const hasRealContent = pnlGraphics.length > 1 || (pnlGraphics.length === 1 && pnlGraphics[0].title !== "Coming Soon");

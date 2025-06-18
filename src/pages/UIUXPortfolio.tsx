@@ -9,9 +9,10 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Textarea } from "@/components/ui/textarea";
+import { useSimpleDegenMode } from "@/hooks/useSimpleDegenMode";
 
 const UIUXPortfolio = () => {
-  const [isDegenMode, setIsDegenMode] = useState(false);
+  const { isDegenMode, logUploadActivity } = useSimpleDegenMode();
   const [editingCard, setEditingCard] = useState<number | null>(null);
   const [newTitle, setNewTitle] = useState("");
   const [newDescription, setNewDescription] = useState("");
@@ -29,27 +30,6 @@ const UIUXPortfolio = () => {
     }
   ]);
 
-  // Check for Degen Mode from localStorage
-  useEffect(() => {
-    const checkDegenMode = () => {
-      const savedDegenMode = localStorage.getItem("degenMode");
-      setIsDegenMode(savedDegenMode === "true");
-    };
-
-    checkDegenMode();
-    
-    // Listen for storage changes
-    window.addEventListener('storage', checkDegenMode);
-    
-    // Also check periodically in case localStorage is updated on same tab
-    const interval = setInterval(checkDegenMode, 1000);
-
-    return () => {
-      window.removeEventListener('storage', checkDegenMode);
-      clearInterval(interval);
-    };
-  }, []);
-
   const startEditing = (project: typeof projects[0]) => {
     setEditingCard(project.id);
     setNewTitle(project.title);
@@ -58,12 +38,22 @@ const UIUXPortfolio = () => {
     setNewWebsiteUrl(project.websiteUrl);
   };
 
-  const saveEdit = () => {
-    setProjects(projects.map(project => 
+  const saveEdit = async () => {
+    const updatedProjects = projects.map(project => 
       project.id === editingCard 
         ? { ...project, title: newTitle, description: newDescription, image: newImage, websiteUrl: newWebsiteUrl }
         : project
-    ));
+    );
+    setProjects(updatedProjects);
+    
+    // Log the activity
+    await logUploadActivity('edit', 'uiux', editingCard!.toString(), {
+      title: newTitle,
+      description: newDescription,
+      image: newImage,
+      websiteUrl: newWebsiteUrl
+    });
+    
     setEditingCard(null);
   };
 
@@ -75,20 +65,31 @@ const UIUXPortfolio = () => {
     setNewWebsiteUrl("");
   };
 
-  const addNewProject = () => {
+  const addNewProject = async () => {
     const newId = Math.max(...projects.map(p => p.id)) + 1;
-    setProjects([...projects, {
+    const newProject = {
       id: newId,
       title: "New Project",
       description: "Add your project description",
       image: "",
       websiteUrl: "",
       category: "UI/UX"
-    }]);
+    };
+    
+    setProjects([...projects, newProject]);
+    
+    // Log the activity
+    await logUploadActivity('upload', 'uiux', newId.toString(), newProject);
   };
 
-  const deleteProject = (projectId: number) => {
+  const deleteProject = async (projectId: number) => {
+    const projectToDelete = projects.find(p => p.id === projectId);
     setProjects(projects.filter(project => project.id !== projectId));
+    
+    // Log the activity
+    if (projectToDelete) {
+      await logUploadActivity('delete', 'uiux', projectId.toString(), projectToDelete);
+    }
   };
 
   const hasRealContent = projects.length > 1 || (projects.length === 1 && projects[0].title !== "Coming Soon");
