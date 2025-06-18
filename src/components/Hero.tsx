@@ -11,7 +11,7 @@ const Hero = () => {
       <div className="geometric-bg"></div>
       
       <div className="container mx-auto px-6 text-center relative z-10">
-        <div className="max-w-5xl mx-auto space-y-12">
+        <div className="max-w-5xl mx-auto space-y-12 pt-20">
           {/* Main heading with enhanced animations */}
           <div className="relative">
             <h1 className="text-6xl md:text-8xl font-light leading-tight mb-6 text-balance">
