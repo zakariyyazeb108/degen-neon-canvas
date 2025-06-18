@@ -10,8 +10,6 @@ export const useSimpleDegenMode = () => {
 
   // Get client IP for security tracking
   const getClientIP = () => {
-    // In a real implementation, you might get this from a header or service
-    // For now, we'll use a placeholder
     return 'client_browser';
   };
 
@@ -99,25 +97,25 @@ export const useSimpleDegenMode = () => {
         return false;
       }
 
-      // Create anonymous session with Supabase
-      const { data: authData, error: authError } = await supabase.auth.signInAnonymously();
+      // Generate a session token directly without Supabase auth
+      const sessionToken = crypto.randomUUID();
       
-      if (authError || !authData?.user) {
-        console.error('Auth error:', authError);
-        toast({
-          title: "Authentication Error",
-          description: "Failed to create secure session",
-          variant: "destructive"
+      // Create a temporary user ID for this session
+      const tempUserId = crypto.randomUUID();
+
+      // Create secure degen session record directly
+      const { error: sessionError } = await supabase
+        .from('degen_sessions')
+        .insert({
+          user_id: tempUserId,
+          session_token: sessionToken,
+          expires_at: new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString(), // 24 hours from now
+          ip_address: getClientIP(),
+          user_agent: navigator.userAgent,
+          is_active: true
         });
-        return false;
-      }
 
-      // Create secure degen session using the enhanced function
-      const { data: sessionData, error: sessionError } = await supabase.rpc('create_degen_session', {
-        p_user_id: authData.user.id
-      });
-
-      if (sessionError || !sessionData || sessionData.length === 0) {
+      if (sessionError) {
         console.error('Session creation error:', sessionError);
         toast({
           title: "Error",
@@ -126,11 +124,9 @@ export const useSimpleDegenMode = () => {
         });
         return false;
       }
-
-      const { session_token } = sessionData[0];
       
       // Store only the session token (not the full session data)
-      localStorage.setItem('simple_degen_session_token', session_token);
+      localStorage.setItem('simple_degen_session_token', sessionToken);
 
       setIsDegenMode(true);
       
