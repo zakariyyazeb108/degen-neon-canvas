@@ -40,8 +40,8 @@ const Hero = () => {
             </p>
           </div>
           
-          {/* CTA with premium styling and animation */}
-          <div className="pt-12 animate-fade-in-up [animation-delay:2s] [animation-fill-mode:forwards] opacity-0">
+          {/* CTA with premium styling and animation - adjusted spacing */}
+          <div className="pt-8 pb-20 animate-fade-in-up [animation-delay:2s] [animation-fill-mode:forwards] opacity-0">
             <MagneticButton className="premium-button text-white px-12 py-4 text-lg font-medium rounded-full">
               Let's Create Together
             </MagneticButton>
@@ -49,8 +49,8 @@ const Hero = () => {
         </div>
       </div>
       
-      {/* Advanced scroll indicator */}
-      <div className="absolute bottom-12 left-1/2 transform -translate-x-1/2 animate-fade-in [animation-delay:2.2s] [animation-fill-mode:forwards] opacity-0">
+      {/* Advanced scroll indicator - positioned to avoid overlap */}
+      <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 animate-fade-in [animation-delay:2.2s] [animation-fill-mode:forwards] opacity-0">
         <div className="scroll-indicator"></div>
       </div>
     </section>

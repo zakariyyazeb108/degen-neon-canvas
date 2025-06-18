@@ -1,7 +1,7 @@
 
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import { MessageCircle, Mail, Clock, DollarSign } from "lucide-react";
+import { MessageCircle, Clock, DollarSign } from "lucide-react";
 
 const Contact = () => {
   const contactMethods = [
@@ -9,15 +9,8 @@ const Contact = () => {
       icon: MessageCircle,
       title: "Discord",
       description: "Fastest response time",
-      value: "@degendesigns",
+      value: "@d3gennn",
       action: "Send Message"
-    },
-    {
-      icon: Mail,
-      title: "Email",
-      description: "For detailed inquiries",
-      value: "hello@degendesigns.com",
-      action: "Send Email"
     }
   ];
 
@@ -70,7 +63,7 @@ const Contact = () => {
                 <h3 className="text-2xl font-medium text-white mb-6">Get in Touch</h3>
                 <p className="text-white/60 leading-relaxed mb-8">
                   I'm always excited to work on new projects and collaborate with creative minds. 
-                  Choose your preferred method to start the conversation.
+                  Reach out on Discord to start the conversation.
                 </p>
               </div>
 
@@ -106,7 +99,7 @@ const Contact = () => {
                 <Card className="premium-card p-4 text-center">
                   <DollarSign className="w-6 h-6 text-blue-400 mx-auto mb-2" />
                   <p className="text-white/80 font-medium">Starting From</p>
-                  <p className="text-white/50 text-sm">$150</p>
+                  <p className="text-white/50 text-sm">$50</p>
                 </Card>
               </div>
             </div>

@@ -30,7 +30,7 @@ const Services = () => {
       title: "Banners",
       description: "Eye-catching banner designs for web and social media campaigns that convert.",
       features: ["Web Banners", "Social Media", "Display Ads", "Campaign Assets"],
-      price: "From $150"
+      price: "From $50"
     }
   ];
 
