@@ -1,4 +1,3 @@
-
 import { Card } from "@/components/ui/card";
 import { Monitor, Package, TrendingUp, Image } from "lucide-react";
 
@@ -9,28 +8,28 @@ const Services = () => {
       title: "UI/UX",
       description: "User experiences that balance beautiful aesthetics with flawless functionality.",
       features: ["Web Design", "Mobile UI", "Prototypes", "User Research"],
-      price: "From $800"
+      price: "$800"
     },
     {
       icon: Package,
       title: "Graphics Packs",
       description: "Complete visual packages for brands and campaigns with consistent design systems.",
       features: ["Brand Packages", "Social Media Kits", "Marketing Materials", "Visual Guidelines"],
-      price: "From $300"
+      price: "$300"
     },
     {
       icon: TrendingUp,
       title: "PNL's",
       description: "Profit & loss visualizations for trading communities that clearly communicate performance.",
       features: ["Trading Results", "Performance Charts", "Portfolio Graphics", "Social Shares"],
-      price: "From $50"
+      price: "$50"
     },
     {
       icon: Image,
       title: "Banners",
       description: "Eye-catching banner designs for web and social media campaigns that convert.",
       features: ["Web Banners", "Social Media", "Display Ads", "Campaign Assets"],
-      price: "From $50"
+      price: "$50"
     }
   ];
 
