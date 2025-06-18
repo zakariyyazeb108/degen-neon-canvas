@@ -81,6 +81,8 @@ export const useSimpleDegenMode = () => {
     setLoading(true);
 
     try {
+      console.log('Starting degen mode activation...');
+      
       // Check rate limiting before proceeding
       const { data: rateLimitData, error: rateLimitError } = await supabase.rpc('check_rate_limit', {
         client_ip: getClientIP()
@@ -103,6 +105,8 @@ export const useSimpleDegenMode = () => {
       // Create a temporary user ID for this session
       const tempUserId = crypto.randomUUID();
 
+      console.log('Creating session with temp user ID:', tempUserId);
+
       // Create secure degen session record directly
       const { error: sessionError } = await supabase
         .from('degen_sessions')
@@ -119,11 +123,13 @@ export const useSimpleDegenMode = () => {
         console.error('Session creation error:', sessionError);
         toast({
           title: "Error",
-          description: "Failed to create secure session",
+          description: "Failed to create secure session. Please try again.",
           variant: "destructive"
         });
         return false;
       }
+      
+      console.log('Session created successfully');
       
       // Store only the session token (not the full session data)
       localStorage.setItem('simple_degen_session_token', sessionToken);
@@ -150,7 +156,7 @@ export const useSimpleDegenMode = () => {
 
       toast({
         title: "Error",
-        description: "Failed to activate Degen Mode",
+        description: "Failed to activate Degen Mode. Please try again.",
         variant: "destructive"
       });
       return false;
