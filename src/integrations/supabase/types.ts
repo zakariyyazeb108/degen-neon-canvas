@@ -9,13 +9,130 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
-      [_ in never]: never
+      degen_permissions: {
+        Row: {
+          created_at: string
+          expires_at: string | null
+          granted_at: string
+          granted_by: string | null
+          id: string
+          is_degen_user: boolean
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          expires_at?: string | null
+          granted_at?: string
+          granted_by?: string | null
+          id?: string
+          is_degen_user?: boolean
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          expires_at?: string | null
+          granted_at?: string
+          granted_by?: string | null
+          id?: string
+          is_degen_user?: boolean
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      degen_sessions: {
+        Row: {
+          activated_at: string
+          created_at: string
+          expires_at: string
+          id: string
+          ip_address: string | null
+          is_active: boolean
+          session_token: string
+          user_agent: string | null
+          user_id: string
+        }
+        Insert: {
+          activated_at?: string
+          created_at?: string
+          expires_at?: string
+          id?: string
+          ip_address?: string | null
+          is_active?: boolean
+          session_token: string
+          user_agent?: string | null
+          user_id: string
+        }
+        Update: {
+          activated_at?: string
+          created_at?: string
+          expires_at?: string
+          id?: string
+          ip_address?: string | null
+          is_active?: boolean
+          session_token?: string
+          user_agent?: string | null
+          user_id?: string
+        }
+        Relationships: []
+      }
+      upload_logs: {
+        Row: {
+          action: string
+          created_at: string
+          id: string
+          ip_address: string | null
+          item_data: Json | null
+          item_id: string
+          item_type: string
+          session_token: string | null
+          user_agent: string | null
+          user_id: string
+        }
+        Insert: {
+          action: string
+          created_at?: string
+          id?: string
+          ip_address?: string | null
+          item_data?: Json | null
+          item_id: string
+          item_type: string
+          session_token?: string | null
+          user_agent?: string | null
+          user_id: string
+        }
+        Update: {
+          action?: string
+          created_at?: string
+          id?: string
+          ip_address?: string | null
+          item_data?: Json | null
+          item_id?: string
+          item_type?: string
+          session_token?: string | null
+          user_agent?: string | null
+          user_id?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      check_degen_access: {
+        Args: { user_id: string }
+        Returns: boolean
+      }
+      validate_degen_session: {
+        Args: { session_token: string }
+        Returns: {
+          user_id: string
+          is_valid: boolean
+        }[]
+      }
     }
     Enums: {
       [_ in never]: never

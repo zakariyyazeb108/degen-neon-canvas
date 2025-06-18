@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { Card } from "@/components/ui/card";
 import { ArrowLeft, ExternalLink, Upload, Trash2 } from "lucide-react";
@@ -10,8 +9,10 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Textarea } from "@/components/ui/textarea";
+import { useDegenMode } from "@/hooks/useDegenMode";
 
 const BannersPortfolio = () => {
+  const { isDegenMode, logUploadActivity } = useDegenMode();
   const [selectedImage, setSelectedImage] = useState<{
     src: string;
     alt: string;
@@ -20,7 +21,6 @@ const BannersPortfolio = () => {
     category: string;
   } | null>(null);
 
-  const [isDegenMode, setIsDegenMode] = useState(false);
   const [editingCard, setEditingCard] = useState<number | null>(null);
   const [newTitle, setNewTitle] = useState("");
   const [newDescription, setNewDescription] = useState("");
@@ -64,27 +64,6 @@ const BannersPortfolio = () => {
     }
   ]);
 
-  // Check for Degen Mode from localStorage
-  useEffect(() => {
-    const checkDegenMode = () => {
-      const savedDegenMode = localStorage.getItem("degenMode");
-      setIsDegenMode(savedDegenMode === "true");
-    };
-
-    checkDegenMode();
-    
-    // Listen for storage changes
-    window.addEventListener('storage', checkDegenMode);
-    
-    // Also check periodically in case localStorage is updated on same tab
-    const interval = setInterval(checkDegenMode, 1000);
-
-    return () => {
-      window.removeEventListener('storage', checkDegenMode);
-      clearInterval(interval);
-    };
-  }, []);
-
   const openImageViewer = (banner: typeof banners[0]) => {
     if (isDegenMode) return; // Don't open viewer in degen mode
     setSelectedImage({
@@ -107,12 +86,31 @@ const BannersPortfolio = () => {
     setNewImage(banner.image);
   };
 
-  const saveEdit = () => {
+  const saveEdit = async () => {
+    const originalBanner = banners.find(b => b.id === editingCard);
+    const updatedBanner = { 
+      title: newTitle, 
+      description: newDescription, 
+      image: newImage 
+    };
+
     setBanners(banners.map(banner => 
       banner.id === editingCard 
-        ? { ...banner, title: newTitle, description: newDescription, image: newImage }
+        ? { ...banner, ...updatedBanner }
         : banner
     ));
+
+    // Log the upload activity
+    await logUploadActivity(
+      'edit',
+      'banner',
+      editingCard?.toString() || '',
+      {
+        original: originalBanner,
+        updated: updatedBanner
+      }
+    );
+
     setEditingCard(null);
   };
 
@@ -123,19 +121,38 @@ const BannersPortfolio = () => {
     setNewImage("");
   };
 
-  const addNewBanner = () => {
+  const addNewBanner = async () => {
     const newId = Math.max(...banners.map(b => b.id)) + 1;
-    setBanners([...banners, {
+    const newBanner = {
       id: newId,
       title: "New Banner",
       description: "Add your banner description",
       image: "",
       category: "Custom"
-    }]);
+    };
+
+    setBanners([...banners, newBanner]);
+
+    // Log the upload activity
+    await logUploadActivity(
+      'upload',
+      'banner',
+      newId.toString(),
+      newBanner
+    );
   };
 
-  const deleteBanner = (bannerId: number) => {
+  const deleteBanner = async (bannerId: number) => {
+    const bannerToDelete = banners.find(b => b.id === bannerId);
     setBanners(banners.filter(banner => banner.id !== bannerId));
+
+    // Log the upload activity
+    await logUploadActivity(
+      'delete',
+      'banner',
+      bannerId.toString(),
+      bannerToDelete
+    );
   };
 
   return (
