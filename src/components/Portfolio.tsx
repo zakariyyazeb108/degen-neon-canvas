@@ -1,16 +1,53 @@
 
+import { useState, useEffect } from "react";
 import { Card } from "@/components/ui/card";
 import { ArrowUpRight, Image, Monitor, TrendingUp, Package } from "lucide-react";
 import { Link } from "react-router-dom";
+import { supabase } from "@/integrations/supabase/client";
 
 const Portfolio = () => {
+  const [counts, setCounts] = useState({
+    banners: 0,
+    uiux: 0,
+    pnl: 0,
+    graphics: 0
+  });
+
+  useEffect(() => {
+    const fetchCounts = async () => {
+      try {
+        const { data, error } = await supabase
+          .from('portfolio_items')
+          .select('item_type');
+
+        if (error) throw error;
+
+        const countsByType = data.reduce((acc, item) => {
+          acc[item.item_type] = (acc[item.item_type] || 0) + 1;
+          return acc;
+        }, {} as Record<string, number>);
+
+        setCounts({
+          banners: countsByType.banner || 0,
+          uiux: countsByType.uiux || 0,
+          pnl: countsByType.pnl || 0,
+          graphics: countsByType.graphics || 0
+        });
+      } catch (error) {
+        console.error('Error fetching portfolio counts:', error);
+      }
+    };
+
+    fetchCounts();
+  }, []);
+
   const categories = [
     {
       id: "banners",
       title: "Banners",
       description: "Eye-catching banner designs for web and social media campaigns",
       icon: Image,
-      count: "25+ Projects",
+      count: `${counts.banners}+ Projects`,
       path: "/portfolio/banners"
     },
     {
@@ -18,7 +55,7 @@ const Portfolio = () => {
       title: "UI/UX Design",
       description: "Modern interfaces and user experiences that convert",
       icon: Monitor,
-      count: "15+ Projects",
+      count: `${counts.uiux}+ Projects`,
       path: "/portfolio/uiux"
     },
     {
@@ -26,7 +63,7 @@ const Portfolio = () => {
       title: "PNL Graphics",
       description: "Profit & loss visualizations for trading communities",
       icon: TrendingUp,
-      count: "30+ Graphics",
+      count: `${counts.pnl}+ Graphics`,
       path: "/portfolio/pnl"
     },
     {
@@ -34,7 +71,7 @@ const Portfolio = () => {
       title: "Graphics Packs",
       description: "Complete visual packages for brands and campaigns",
       icon: Package,
-      count: "20+ Packs",
+      count: `${counts.graphics}+ Packs`,
       path: "/portfolio/graphics"
     }
   ];

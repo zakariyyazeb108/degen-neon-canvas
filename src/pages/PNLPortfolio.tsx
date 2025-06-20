@@ -1,7 +1,7 @@
 
 import { useState, useEffect } from "react";
 import { Card } from "@/components/ui/card";
-import { ArrowLeft, ExternalLink, Upload, Trash2 } from "lucide-react";
+import { ArrowLeft, ExternalLink, Upload, Trash2, Image as ImageIcon } from "lucide-react";
 import { Link } from "react-router-dom";
 import Navigation from "@/components/Navigation";
 import CustomCursor from "@/components/CustomCursor";
@@ -10,47 +10,73 @@ import { Input } from "@/components/ui/input";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Textarea } from "@/components/ui/textarea";
 import { useSimpleDegenMode } from "@/hooks/useSimpleDegenMode";
+import { usePortfolioItems } from "@/hooks/usePortfolioItems";
 
 const PNLPortfolio = () => {
-  const { isDegenMode, logUploadActivity } = useSimpleDegenMode();
-  const [editingCard, setEditingCard] = useState<number | null>(null);
+  const { isDegenMode } = useSimpleDegenMode();
+  const { items: pnlGraphics, loading, addItem, updateItem, deleteItem } = usePortfolioItems('pnl');
+  const [editingCard, setEditingCard] = useState<string | null>(null);
   const [newTitle, setNewTitle] = useState("");
   const [newDescription, setNewDescription] = useState("");
   const [newImage, setNewImage] = useState("");
+  const [newCategory, setNewCategory] = useState("");
+  const [uploadingImage, setUploadingImage] = useState(false);
 
-  const [pnlGraphics, setPnlGraphics] = useState([
-    {
-      id: 1,
-      title: "Coming Soon",
-      description: "PNL graphics will be showcased here",
-      image: "",
-      category: "PNL"
+  const handleFileUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (!file) return;
+
+    // Validate file type
+    if (!file.type.startsWith('image/')) {
+      alert('Please select an image file');
+      return;
     }
-  ]);
+
+    // Validate file size (5MB limit)
+    if (file.size > 5 * 1024 * 1024) {
+      alert('File size must be less than 5MB');
+      return;
+    }
+
+    setUploadingImage(true);
+
+    try {
+      const imageUrl = URL.createObjectURL(file);
+      setNewImage(imageUrl);
+      console.log('Image uploaded successfully');
+    } catch (error) {
+      console.error('Error uploading image:', error);
+      alert('Failed to upload image. Please try again.');
+    } finally {
+      setUploadingImage(false);
+    }
+  };
 
   const startEditing = (graphic: typeof pnlGraphics[0]) => {
     setEditingCard(graphic.id);
     setNewTitle(graphic.title);
     setNewDescription(graphic.description);
-    setNewImage(graphic.image);
+    setNewImage(graphic.image_url);
+    setNewCategory(graphic.category);
   };
 
   const saveEdit = async () => {
-    const updatedGraphics = pnlGraphics.map(graphic => 
-      graphic.id === editingCard 
-        ? { ...graphic, title: newTitle, description: newDescription, image: newImage }
-        : graphic
-    );
-    setPnlGraphics(updatedGraphics);
-    
-    // Log the activity
-    await logUploadActivity('edit', 'pnl', editingCard!.toString(), {
+    if (!editingCard) return;
+
+    const success = await updateItem(editingCard, {
       title: newTitle,
       description: newDescription,
-      image: newImage
+      image_url: newImage,
+      category: newCategory
     });
-    
-    setEditingCard(null);
+
+    if (success) {
+      setEditingCard(null);
+      setNewTitle("");
+      setNewDescription("");
+      setNewImage("");
+      setNewCategory("");
+    }
   };
 
   const cancelEdit = () => {
@@ -58,35 +84,34 @@ const PNLPortfolio = () => {
     setNewTitle("");
     setNewDescription("");
     setNewImage("");
+    setNewCategory("");
   };
 
   const addNewGraphic = async () => {
-    const newId = Math.max(...pnlGraphics.map(g => g.id)) + 1;
-    const newGraphic = {
-      id: newId,
+    await addItem({
       title: "New PNL Graphic",
       description: "Add your PNL graphic description",
-      image: "",
-      category: "PNL"
-    };
-    
-    setPnlGraphics([...pnlGraphics, newGraphic]);
-    
-    // Log the activity
-    await logUploadActivity('upload', 'pnl', newId.toString(), newGraphic);
+      image_url: "",
+      category: "PNL",
+      item_type: "pnl"
+    });
   };
 
-  const deleteGraphic = async (graphicId: number) => {
-    const graphicToDelete = pnlGraphics.find(g => g.id === graphicId);
-    setPnlGraphics(pnlGraphics.filter(graphic => graphic.id !== graphicId));
-    
-    // Log the activity
-    if (graphicToDelete) {
-      await logUploadActivity('delete', 'pnl', graphicId.toString(), graphicToDelete);
-    }
+  const deleteGraphic = async (graphicId: string) => {
+    await deleteItem(graphicId);
   };
 
-  const hasRealContent = pnlGraphics.length > 1 || (pnlGraphics.length === 1 && pnlGraphics[0].title !== "Coming Soon");
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-background text-foreground flex items-center justify-center">
+        <CustomCursor />
+        <Navigation />
+        <div className="text-white">Loading...</div>
+      </div>
+    );
+  }
+
+  const hasRealContent = pnlGraphics.length > 0;
 
   return (
     <div className="min-h-screen bg-background text-foreground">
@@ -107,6 +132,15 @@ const PNLPortfolio = () => {
             <p className="text-xl text-white/60 max-w-2xl font-light">
               Profit & loss visualizations that clearly communicate trading performance and results
             </p>
+
+            {/* Degen Mode Indicator */}
+            {isDegenMode && (
+              <div className="mt-4 p-3 bg-red-500/20 border border-red-500/30 rounded-lg">
+                <p className="text-red-400 text-sm">
+                  🔥 Degen Mode Active - All changes will be publicly visible
+                </p>
+              </div>
+            )}
           </div>
 
           {/* Add New Graphic Button (Degen Mode) */}
@@ -122,7 +156,7 @@ const PNLPortfolio = () => {
           {/* Graphics Grid or Empty State */}
           {hasRealContent ? (
             <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-              {pnlGraphics.filter(graphic => graphic.title !== "Coming Soon").map((graphic, index) => (
+              {pnlGraphics.map((graphic, index) => (
                 <Card 
                   key={graphic.id} 
                   className="premium-card group overflow-hidden relative"
@@ -144,19 +178,22 @@ const PNLPortfolio = () => {
 
                   <div className="relative">
                     {/* Graphic Image */}
-                    {graphic.image ? (
-                      <div className="aspect-video overflow-hidden">
+                    <div className="aspect-video overflow-hidden bg-gray-900/50">
+                      {graphic.image_url ? (
                         <img 
-                          src={graphic.image} 
+                          src={graphic.image_url} 
                           alt={graphic.title}
                           className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
                         />
-                      </div>
-                    ) : (
-                      <div className="aspect-video bg-gray-800 flex items-center justify-center">
-                        <span className="text-gray-400">No image</span>
-                      </div>
-                    )}
+                      ) : (
+                        <div className="w-full h-full bg-gray-800/50 flex items-center justify-center border-2 border-dashed border-gray-600">
+                          <div className="text-center">
+                            <ImageIcon className="w-12 h-12 text-gray-400 mx-auto mb-2" />
+                            <span className="text-gray-400 text-sm">No image uploaded</span>
+                          </div>
+                        </div>
+                      )}
+                    </div>
 
                     {/* Degen Mode Edit Button */}
                     {isDegenMode && (
@@ -214,42 +251,119 @@ const PNLPortfolio = () => {
 
       {/* Edit Graphic Dialog */}
       <Dialog open={editingCard !== null} onOpenChange={() => cancelEdit()}>
-        <DialogContent className="bg-background border-white/10 max-w-2xl">
+        <DialogContent className="bg-background border-white/10 max-w-2xl max-h-[90vh] overflow-y-auto">
           <DialogHeader>
             <DialogTitle className="text-white">Edit PNL Graphic</DialogTitle>
           </DialogHeader>
-          <div className="space-y-4">
+          <div className="space-y-6">
+            {/* Image Upload Section */}
             <div>
-              <label className="text-white/80 text-sm mb-2 block">Title</label>
+              <label className="text-white/80 text-sm mb-3 block font-medium">Graphic Image</label>
+              
+              {/* Current Image Preview */}
+              {newImage && (
+                <div className="mb-4">
+                  <div className="aspect-video w-full max-w-md mx-auto rounded-lg overflow-hidden bg-gray-900">
+                    <img 
+                      src={newImage} 
+                      alt="Preview" 
+                      className="w-full h-full object-cover"
+                    />
+                  </div>
+                </div>
+              )}
+              
+              {/* Upload Options */}
+              <div className="space-y-3">
+                {/* File Upload */}
+                <div>
+                  <label className="block">
+                    <input
+                      type="file"
+                      accept="image/*"
+                      onChange={handleFileUpload}
+                      className="hidden"
+                    />
+                    <Button 
+                      type="button" 
+                      variant="outline" 
+                      className="w-full bg-gray-800/50 border-gray-600 hover:bg-gray-700/50"
+                      disabled={uploadingImage}
+                      onClick={() => (document.querySelector('input[type="file"]') as HTMLInputElement)?.click()}
+                    >
+                      <Upload className="w-4 h-4 mr-2" />
+                      {uploadingImage ? 'Uploading...' : 'Upload from PC'}
+                    </Button>
+                  </label>
+                </div>
+                
+                {/* URL Input */}
+                <div>
+                  <Input
+                    value={newImage}
+                    onChange={(e) => setNewImage(e.target.value)}
+                    className="bg-background/50 border-white/20 text-white"
+                    placeholder="Or paste image URL..."
+                  />
+                </div>
+              </div>
+            </div>
+
+            {/* Title Input */}
+            <div>
+              <label className="text-white/80 text-sm mb-2 block font-medium">Title</label>
               <Input
                 value={newTitle}
                 onChange={(e) => setNewTitle(e.target.value)}
                 className="bg-background/50 border-white/20 text-white"
+                placeholder="Enter graphic title..."
               />
             </div>
+
+            {/* Description Input */}
             <div>
-              <label className="text-white/80 text-sm mb-2 block">Description</label>
+              <label className="text-white/80 text-sm mb-2 block font-medium">Description</label>
               <Textarea
                 value={newDescription}
                 onChange={(e) => setNewDescription(e.target.value)}
-                className="bg-background/50 border-white/20 text-white"
+                className="bg-background/50 border-white/20 text-white resize-none"
+                placeholder="Enter graphic description..."
                 rows={3}
               />
             </div>
+
+            {/* Category Input */}
             <div>
-              <label className="text-white/80 text-sm mb-2 block">Image URL</label>
+              <label className="text-white/80 text-sm mb-2 block font-medium">Category</label>
               <Input
-                value={newImage}
-                onChange={(e) => setNewImage(e.target.value)}
+                value={newCategory}
+                onChange={(e) => setNewCategory(e.target.value)}
                 className="bg-background/50 border-white/20 text-white"
-                placeholder="Enter image URL..."
+                placeholder="Enter category..."
               />
             </div>
-            <div className="flex gap-2">
-              <Button onClick={saveEdit} className="flex-1 bg-red-500 hover:bg-red-600">
+
+            {/* Public Notice */}
+            <div className="p-3 bg-red-500/10 border border-red-500/20 rounded-lg">
+              <p className="text-red-400 text-xs">
+                ⚠️ This content will be publicly visible once saved
+              </p>
+            </div>
+
+            {/* Action Buttons */}
+            <div className="flex gap-3 pt-2">
+              <Button 
+                onClick={saveEdit} 
+                className="flex-1 bg-red-500 hover:bg-red-600"
+                disabled={!newTitle.trim()}
+              >
                 Save Changes
               </Button>
-              <Button onClick={cancelEdit} variant="outline" className="flex-1">
+              <Button 
+                onClick={cancelEdit} 
+                variant="outline" 
+                className="flex-1 border-gray-600 hover:bg-gray-700/50"
+              >
                 Cancel
               </Button>
             </div>

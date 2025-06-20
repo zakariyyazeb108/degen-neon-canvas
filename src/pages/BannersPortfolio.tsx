@@ -11,9 +11,11 @@ import { Input } from "@/components/ui/input";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Textarea } from "@/components/ui/textarea";
 import { useSimpleDegenMode } from "@/hooks/useSimpleDegenMode";
+import { usePortfolioItems } from "@/hooks/usePortfolioItems";
 
 const BannersPortfolio = () => {
-  const { isDegenMode, logUploadActivity } = useSimpleDegenMode();
+  const { isDegenMode } = useSimpleDegenMode();
+  const { items: banners, loading, addItem, updateItem, deleteItem } = usePortfolioItems('banner');
   const [selectedImage, setSelectedImage] = useState<{
     src: string;
     alt: string;
@@ -22,54 +24,17 @@ const BannersPortfolio = () => {
     category: string;
   } | null>(null);
 
-  const [editingCard, setEditingCard] = useState<number | null>(null);
+  const [editingCard, setEditingCard] = useState<string | null>(null);
   const [newTitle, setNewTitle] = useState("");
   const [newDescription, setNewDescription] = useState("");
   const [newImage, setNewImage] = useState("");
+  const [newCategory, setNewCategory] = useState("");
   const [uploadingImage, setUploadingImage] = useState(false);
-
-  const [banners, setBanners] = useState([
-    {
-      id: 1,
-      title: "WealthCord",
-      description: "Financial strategy mobile app banner with sleek green gradient design",
-      image: "/lovable-uploads/05203f13-4871-45c1-ac98-43a86539f4a9.png",
-      category: "Mobile App"
-    },
-    {
-      id: 2,
-      title: "Viralify",
-      description: "Credit card payment app with glassmorphism design elements",
-      image: "/lovable-uploads/c499cbcc-72b1-4929-84cf-d9c70792f6ea.png",
-      category: "Fintech"
-    },
-    {
-      id: 3,
-      title: "Cash Club",
-      description: "Trading education platform with modern dashboard showcase",
-      image: "/lovable-uploads/cf39ab77-ca34-4acd-a81d-aa1e0a486053.png",
-      category: "Education"
-    },
-    {
-      id: 4,
-      title: "Choose It Community",
-      description: "Discord community banner with warm gradient and professional layout",
-      image: "/lovable-uploads/b9081016-ba33-4317-b63d-98f1367a57d0.png",
-      category: "Community"
-    },
-    {
-      id: 5,
-      title: "eMoney",
-      description: "Financial app promotion with mobile-first design approach",
-      image: "/lovable-uploads/a34c31fb-1b4e-4205-997b-eb653d12f542.png",
-      category: "Mobile App"
-    }
-  ]);
 
   const openImageViewer = (banner: typeof banners[0]) => {
     if (isDegenMode) return; // Don't open viewer in degen mode
     setSelectedImage({
-      src: banner.image,
+      src: banner.image_url,
       alt: banner.title,
       title: banner.title,
       description: banner.description,
@@ -124,37 +89,27 @@ const BannersPortfolio = () => {
     setEditingCard(banner.id);
     setNewTitle(banner.title);
     setNewDescription(banner.description);
-    setNewImage(banner.image);
+    setNewImage(banner.image_url);
+    setNewCategory(banner.category);
   };
 
   const saveEdit = async () => {
-    const originalBanner = banners.find(b => b.id === editingCard);
-    const updatedBanner = { 
-      title: newTitle, 
-      description: newDescription, 
-      image: newImage 
-    };
+    if (!editingCard) return;
 
-    setBanners(banners.map(banner => 
-      banner.id === editingCard 
-        ? { ...banner, ...updatedBanner }
-        : banner
-    ));
+    const success = await updateItem(editingCard, {
+      title: newTitle,
+      description: newDescription,
+      image_url: newImage,
+      category: newCategory
+    });
 
-    // Log the upload activity - this makes it publicly visible
-    await logUploadActivity(
-      'edit',
-      'banner',
-      editingCard?.toString() || '',
-      {
-        original: originalBanner,
-        updated: updatedBanner,
-        timestamp: new Date().toISOString(),
-        public: true // Mark as publicly visible
-      }
-    );
-
-    setEditingCard(null);
+    if (success) {
+      setEditingCard(null);
+      setNewTitle("");
+      setNewDescription("");
+      setNewImage("");
+      setNewCategory("");
+    }
   };
 
   const cancelEdit = () => {
@@ -162,49 +117,32 @@ const BannersPortfolio = () => {
     setNewTitle("");
     setNewDescription("");
     setNewImage("");
+    setNewCategory("");
   };
 
   const addNewBanner = async () => {
-    const newId = Math.max(...banners.map(b => b.id)) + 1;
-    const newBanner = {
-      id: newId,
+    await addItem({
       title: "New Banner",
       description: "Add your banner description",
-      image: "",
-      category: "Custom"
-    };
-
-    setBanners([...banners, newBanner]);
-
-    // Log the upload activity - this makes it publicly visible
-    await logUploadActivity(
-      'upload',
-      'banner',
-      newId.toString(),
-      {
-        ...newBanner,
-        timestamp: new Date().toISOString(),
-        public: true // Mark as publicly visible
-      }
-    );
+      image_url: "",
+      category: "Custom",
+      item_type: "banner"
+    });
   };
 
-  const deleteBanner = async (bannerId: number) => {
-    const bannerToDelete = banners.find(b => b.id === bannerId);
-    setBanners(banners.filter(banner => banner.id !== bannerId));
-
-    // Log the deletion activity
-    await logUploadActivity(
-      'delete',
-      'banner',
-      bannerId.toString(),
-      {
-        ...bannerToDelete,
-        timestamp: new Date().toISOString(),
-        public: false // No longer public after deletion
-      }
-    );
+  const deleteBanner = async (bannerId: string) => {
+    await deleteItem(bannerId);
   };
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-background text-foreground flex items-center justify-center">
+        <CustomCursor />
+        <Navigation />
+        <div className="text-white">Loading...</div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-background text-foreground">
@@ -272,9 +210,9 @@ const BannersPortfolio = () => {
                 <div className="relative">
                   {/* Banner Image with improved quality */}
                   <div className="aspect-video overflow-hidden bg-gray-900/50">
-                    {banner.image ? (
+                    {banner.image_url ? (
                       <img 
-                        src={banner.image} 
+                        src={banner.image_url} 
                         alt={banner.title}
                         className="w-full h-full object-cover object-center transition-transform duration-500 group-hover:scale-105"
                         style={{ 
@@ -293,7 +231,7 @@ const BannersPortfolio = () => {
                     )}
                     
                     {/* Overlay */}
-                    {!isDegenMode && banner.image && (
+                    {!isDegenMode && banner.image_url && (
                       <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
                         <ExternalLink className="w-8 h-8 text-white" />
                       </div>
@@ -338,7 +276,7 @@ const BannersPortfolio = () => {
           <div className="mt-20 text-center">
             <div className="grid grid-cols-2 md:grid-cols-4 gap-8 max-w-3xl mx-auto">
               <div>
-                <div className="text-3xl font-bold gradient-text mb-2">20+</div>
+                <div className="text-3xl font-bold gradient-text mb-2">{banners.length}+</div>
                 <div className="text-white/60 text-sm">Banner Designs</div>
               </div>
               <div>
@@ -442,6 +380,17 @@ const BannersPortfolio = () => {
                 className="bg-background/50 border-white/20 text-white resize-none"
                 placeholder="Enter banner description..."
                 rows={3}
+              />
+            </div>
+
+            {/* Category Input */}
+            <div>
+              <label className="text-white/80 text-sm mb-2 block font-medium">Category</label>
+              <Input
+                value={newCategory}
+                onChange={(e) => setNewCategory(e.target.value)}
+                className="bg-background/50 border-white/20 text-white"
+                placeholder="Enter category..."
               />
             </div>
 
