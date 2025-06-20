@@ -1,6 +1,7 @@
+
 import { useState, useEffect } from "react";
 import { Card } from "@/components/ui/card";
-import { ArrowLeft, ExternalLink, Upload, Trash2 } from "lucide-react";
+import { ArrowLeft, ExternalLink, Upload, Trash2, Image as ImageIcon } from "lucide-react";
 import { Link } from "react-router-dom";
 import Navigation from "@/components/Navigation";
 import CustomCursor from "@/components/CustomCursor";
@@ -9,10 +10,10 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Textarea } from "@/components/ui/textarea";
-import { useDegenMode } from "@/hooks/useDegenMode";
+import { useSimpleDegenMode } from "@/hooks/useSimpleDegenMode";
 
 const BannersPortfolio = () => {
-  const { isDegenMode, logUploadActivity } = useDegenMode();
+  const { isDegenMode, logUploadActivity } = useSimpleDegenMode();
   const [selectedImage, setSelectedImage] = useState<{
     src: string;
     alt: string;
@@ -25,6 +26,7 @@ const BannersPortfolio = () => {
   const [newTitle, setNewTitle] = useState("");
   const [newDescription, setNewDescription] = useState("");
   const [newImage, setNewImage] = useState("");
+  const [uploadingImage, setUploadingImage] = useState(false);
 
   const [banners, setBanners] = useState([
     {
@@ -79,6 +81,45 @@ const BannersPortfolio = () => {
     setSelectedImage(null);
   };
 
+  const handleFileUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (!file) return;
+
+    // Validate file type
+    if (!file.type.startsWith('image/')) {
+      alert('Please select an image file');
+      return;
+    }
+
+    // Validate file size (5MB limit)
+    if (file.size > 5 * 1024 * 1024) {
+      alert('File size must be less than 5MB');
+      return;
+    }
+
+    setUploadingImage(true);
+
+    try {
+      // Create a FormData object to send the file
+      const formData = new FormData();
+      formData.append('file', file);
+
+      // In a real app, you'd upload to your server/storage service
+      // For now, we'll create a local URL for demonstration
+      const imageUrl = URL.createObjectURL(file);
+      
+      // Update the current banner being edited
+      setNewImage(imageUrl);
+      
+      console.log('Image uploaded successfully');
+    } catch (error) {
+      console.error('Error uploading image:', error);
+      alert('Failed to upload image. Please try again.');
+    } finally {
+      setUploadingImage(false);
+    }
+  };
+
   const startEditing = (banner: typeof banners[0]) => {
     setEditingCard(banner.id);
     setNewTitle(banner.title);
@@ -100,14 +141,16 @@ const BannersPortfolio = () => {
         : banner
     ));
 
-    // Log the upload activity
+    // Log the upload activity - this makes it publicly visible
     await logUploadActivity(
       'edit',
       'banner',
       editingCard?.toString() || '',
       {
         original: originalBanner,
-        updated: updatedBanner
+        updated: updatedBanner,
+        timestamp: new Date().toISOString(),
+        public: true // Mark as publicly visible
       }
     );
 
@@ -133,12 +176,16 @@ const BannersPortfolio = () => {
 
     setBanners([...banners, newBanner]);
 
-    // Log the upload activity
+    // Log the upload activity - this makes it publicly visible
     await logUploadActivity(
       'upload',
       'banner',
       newId.toString(),
-      newBanner
+      {
+        ...newBanner,
+        timestamp: new Date().toISOString(),
+        public: true // Mark as publicly visible
+      }
     );
   };
 
@@ -146,12 +193,16 @@ const BannersPortfolio = () => {
     const bannerToDelete = banners.find(b => b.id === bannerId);
     setBanners(banners.filter(banner => banner.id !== bannerId));
 
-    // Log the upload activity
+    // Log the deletion activity
     await logUploadActivity(
       'delete',
       'banner',
       bannerId.toString(),
-      bannerToDelete
+      {
+        ...bannerToDelete,
+        timestamp: new Date().toISOString(),
+        public: false // No longer public after deletion
+      }
     );
   };
 
@@ -174,6 +225,15 @@ const BannersPortfolio = () => {
             <p className="text-xl text-white/60 max-w-2xl font-light">
               Eye-catching banner designs that drive engagement and conversions across web and social platforms
             </p>
+            
+            {/* Degen Mode Indicator */}
+            {isDegenMode && (
+              <div className="mt-4 p-3 bg-red-500/20 border border-red-500/30 rounded-lg">
+                <p className="text-red-400 text-sm">
+                  🔥 Degen Mode Active - All changes will be publicly visible
+                </p>
+              </div>
+            )}
           </div>
 
           {/* Add New Banner Button (Degen Mode) */}
@@ -210,17 +270,25 @@ const BannersPortfolio = () => {
                 )}
 
                 <div className="relative">
-                  {/* Banner Image */}
-                  <div className="aspect-video overflow-hidden">
+                  {/* Banner Image with improved quality */}
+                  <div className="aspect-video overflow-hidden bg-gray-900/50">
                     {banner.image ? (
                       <img 
                         src={banner.image} 
                         alt={banner.title}
-                        className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                        className="w-full h-full object-cover object-center transition-transform duration-500 group-hover:scale-105"
+                        style={{ 
+                          imageRendering: 'high-quality',
+                          filter: 'contrast(1.05) saturate(1.1)'
+                        }}
+                        loading="lazy"
                       />
                     ) : (
-                      <div className="w-full h-full bg-gray-800 flex items-center justify-center">
-                        <span className="text-gray-400">No image</span>
+                      <div className="w-full h-full bg-gray-800/50 flex items-center justify-center border-2 border-dashed border-gray-600">
+                        <div className="text-center">
+                          <ImageIcon className="w-12 h-12 text-gray-400 mx-auto mb-2" />
+                          <span className="text-gray-400 text-sm">No image uploaded</span>
+                        </div>
                       </div>
                     )}
                     
@@ -290,44 +358,114 @@ const BannersPortfolio = () => {
         </div>
       </div>
 
-      {/* Edit Card Dialog */}
+      {/* Enhanced Edit Card Dialog */}
       <Dialog open={editingCard !== null} onOpenChange={() => cancelEdit()}>
-        <DialogContent className="bg-background border-white/10 max-w-2xl">
+        <DialogContent className="bg-background border-white/10 max-w-2xl max-h-[90vh] overflow-y-auto">
           <DialogHeader>
             <DialogTitle className="text-white">Edit Banner Content</DialogTitle>
           </DialogHeader>
-          <div className="space-y-4">
+          <div className="space-y-6">
+            {/* Image Upload Section */}
             <div>
-              <label className="text-white/80 text-sm mb-2 block">Title</label>
+              <label className="text-white/80 text-sm mb-3 block font-medium">Banner Image</label>
+              
+              {/* Current Image Preview */}
+              {newImage && (
+                <div className="mb-4">
+                  <div className="aspect-video w-full max-w-md mx-auto rounded-lg overflow-hidden bg-gray-900">
+                    <img 
+                      src={newImage} 
+                      alt="Preview" 
+                      className="w-full h-full object-cover"
+                      style={{ 
+                        imageRendering: 'high-quality',
+                        filter: 'contrast(1.05) saturate(1.1)'
+                      }}
+                    />
+                  </div>
+                </div>
+              )}
+              
+              {/* Upload Options */}
+              <div className="space-y-3">
+                {/* File Upload */}
+                <div>
+                  <label className="block">
+                    <input
+                      type="file"
+                      accept="image/*"
+                      onChange={handleFileUpload}
+                      className="hidden"
+                    />
+                    <Button 
+                      type="button" 
+                      variant="outline" 
+                      className="w-full bg-gray-800/50 border-gray-600 hover:bg-gray-700/50"
+                      disabled={uploadingImage}
+                      onClick={() => document.querySelector('input[type="file"]')?.click()}
+                    >
+                      <Upload className="w-4 h-4 mr-2" />
+                      {uploadingImage ? 'Uploading...' : 'Upload from PC'}
+                    </Button>
+                  </label>
+                </div>
+                
+                {/* URL Input */}
+                <div>
+                  <Input
+                    value={newImage}
+                    onChange={(e) => setNewImage(e.target.value)}
+                    className="bg-background/50 border-white/20 text-white"
+                    placeholder="Or paste image URL..."
+                  />
+                </div>
+              </div>
+            </div>
+
+            {/* Title Input */}
+            <div>
+              <label className="text-white/80 text-sm mb-2 block font-medium">Title</label>
               <Input
                 value={newTitle}
                 onChange={(e) => setNewTitle(e.target.value)}
                 className="bg-background/50 border-white/20 text-white"
+                placeholder="Enter banner title..."
               />
             </div>
+
+            {/* Description Input */}
             <div>
-              <label className="text-white/80 text-sm mb-2 block">Description</label>
+              <label className="text-white/80 text-sm mb-2 block font-medium">Description</label>
               <Textarea
                 value={newDescription}
                 onChange={(e) => setNewDescription(e.target.value)}
-                className="bg-background/50 border-white/20 text-white"
+                className="bg-background/50 border-white/20 text-white resize-none"
+                placeholder="Enter banner description..."
                 rows={3}
               />
             </div>
-            <div>
-              <label className="text-white/80 text-sm mb-2 block">Image URL</label>
-              <Input
-                value={newImage}
-                onChange={(e) => setNewImage(e.target.value)}
-                className="bg-background/50 border-white/20 text-white"
-                placeholder="Enter image URL..."
-              />
+
+            {/* Public Notice */}
+            <div className="p-3 bg-red-500/10 border border-red-500/20 rounded-lg">
+              <p className="text-red-400 text-xs">
+                ⚠️ This content will be publicly visible once saved
+              </p>
             </div>
-            <div className="flex gap-2">
-              <Button onClick={saveEdit} className="flex-1 bg-red-500 hover:bg-red-600">
+
+            {/* Action Buttons */}
+            <div className="flex gap-3 pt-2">
+              <Button 
+                onClick={saveEdit} 
+                className="flex-1 bg-red-500 hover:bg-red-600"
+                disabled={!newTitle.trim()}
+              >
                 Save Changes
               </Button>
-              <Button onClick={cancelEdit} variant="outline" className="flex-1">
+              <Button 
+                onClick={cancelEdit} 
+                variant="outline" 
+                className="flex-1 border-gray-600 hover:bg-gray-700/50"
+              >
                 Cancel
               </Button>
             </div>
