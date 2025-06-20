@@ -278,7 +278,7 @@ const BannersPortfolio = () => {
                         alt={banner.title}
                         className="w-full h-full object-cover object-center transition-transform duration-500 group-hover:scale-105"
                         style={{ 
-                          imageRendering: 'high-quality',
+                          imageRendering: 'auto',
                           filter: 'contrast(1.05) saturate(1.1)'
                         }}
                         loading="lazy"
@@ -378,7 +378,7 @@ const BannersPortfolio = () => {
                       alt="Preview" 
                       className="w-full h-full object-cover"
                       style={{ 
-                        imageRendering: 'high-quality',
+                        imageRendering: 'auto',
                         filter: 'contrast(1.05) saturate(1.1)'
                       }}
                     />
@@ -402,7 +402,7 @@ const BannersPortfolio = () => {
                       variant="outline" 
                       className="w-full bg-gray-800/50 border-gray-600 hover:bg-gray-700/50"
                       disabled={uploadingImage}
-                      onClick={() => document.querySelector('input[type="file"]')?.click()}
+                      onClick={() => (document.querySelector('input[type="file"]') as HTMLInputElement)?.click()}
                     >
                       <Upload className="w-4 h-4 mr-2" />
                       {uploadingImage ? 'Uploading...' : 'Upload from PC'}
