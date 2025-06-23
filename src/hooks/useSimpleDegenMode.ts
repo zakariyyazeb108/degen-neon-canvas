@@ -93,7 +93,7 @@ export const useSimpleDegenMode = () => {
       } else if (rateLimitData && rateLimitData.length > 0 && rateLimitData[0].is_blocked) {
         toast({
           title: "Too Many Attempts",
-          description: "Please wait before trying again due to multiple failed attempts",
+          description: "Please wait 15 minutes before trying again. Rate limiting has been updated to be more reasonable.",
           variant: "destructive"
         });
         return false;
@@ -189,6 +189,27 @@ export const useSimpleDegenMode = () => {
     });
   };
 
+  // Add reset function for debugging/admin use
+  const resetRateLimit = async () => {
+    try {
+      await supabase.rpc('reset_rate_limit', {
+        client_ip: getClientIP()
+      });
+      
+      toast({
+        title: "Rate Limit Reset",
+        description: "You can now try again",
+      });
+    } catch (error) {
+      console.error('Failed to reset rate limit:', error);
+      toast({
+        title: "Error",
+        description: "Failed to reset rate limit",
+        variant: "destructive"
+      });
+    }
+  };
+
   const logUploadActivity = async (action: string, itemType: string, itemId: string, itemData: any) => {
     if (!isDegenMode) return;
 
@@ -240,6 +261,7 @@ export const useSimpleDegenMode = () => {
     loading,
     activateDegenMode,
     deactivateDegenMode,
-    logUploadActivity
+    logUploadActivity,
+    resetRateLimit // Expose reset function for debugging
   };
 };
