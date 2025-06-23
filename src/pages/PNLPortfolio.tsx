@@ -1,10 +1,10 @@
-
 import { useState, useEffect } from "react";
 import { Card } from "@/components/ui/card";
 import { ArrowLeft, ExternalLink, Upload, Trash2, Image as ImageIcon } from "lucide-react";
 import { Link } from "react-router-dom";
 import Navigation from "@/components/Navigation";
 import CustomCursor from "@/components/CustomCursor";
+import ImageViewer from "@/components/ImageViewer";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
@@ -15,12 +15,34 @@ import { usePortfolioItems } from "@/hooks/usePortfolioItems";
 const PNLPortfolio = () => {
   const { isDegenMode } = useSimpleDegenMode();
   const { items: pnlGraphics, loading, addItem, updateItem, deleteItem } = usePortfolioItems('pnl');
+  const [selectedImage, setSelectedImage] = useState<{
+    src: string;
+    alt: string;
+    title: string;
+    description: string;
+    category: string;
+  } | null>(null);
   const [editingCard, setEditingCard] = useState<string | null>(null);
   const [newTitle, setNewTitle] = useState("");
   const [newDescription, setNewDescription] = useState("");
   const [newImage, setNewImage] = useState("");
   const [newCategory, setNewCategory] = useState("");
   const [uploadingImage, setUploadingImage] = useState(false);
+
+  const openImageViewer = (graphic: typeof pnlGraphics[0]) => {
+    if (isDegenMode) return; // Don't open viewer in degen mode
+    setSelectedImage({
+      src: graphic.image_url,
+      alt: graphic.title,
+      title: graphic.title,
+      description: graphic.description,
+      category: graphic.category
+    });
+  };
+
+  const closeImageViewer = () => {
+    setSelectedImage(null);
+  };
 
   const handleFileUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
@@ -32,9 +54,9 @@ const PNLPortfolio = () => {
       return;
     }
 
-    // Validate file size (5MB limit)
-    if (file.size > 5 * 1024 * 1024) {
-      alert('File size must be less than 5MB');
+    // Increased file size limit to 10MB
+    if (file.size > 10 * 1024 * 1024) {
+      alert('File size must be less than 10MB');
       return;
     }
 
@@ -159,8 +181,9 @@ const PNLPortfolio = () => {
               {pnlGraphics.map((graphic, index) => (
                 <Card 
                   key={graphic.id} 
-                  className="premium-card group overflow-hidden relative"
+                  className={`premium-card group overflow-hidden ${!isDegenMode ? 'cursor-pointer' : ''} relative`}
                   style={{ animationDelay: `${index * 0.1}s` }}
+                  onClick={() => !isDegenMode && graphic.image_url && openImageViewer(graphic)}
                 >
                   {/* Delete Button (Degen Mode) */}
                   {isDegenMode && (
@@ -191,6 +214,13 @@ const PNLPortfolio = () => {
                             <ImageIcon className="w-12 h-12 text-gray-400 mx-auto mb-2" />
                             <span className="text-gray-400 text-sm">No image uploaded</span>
                           </div>
+                        </div>
+                      )}
+
+                      {/* Image Viewer Overlay (only when not in degen mode and has image) */}
+                      {!isDegenMode && graphic.image_url && (
+                        <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
+                          <ExternalLink className="w-8 h-8 text-white" />
                         </div>
                       )}
                     </div>
@@ -370,6 +400,19 @@ const PNLPortfolio = () => {
           </div>
         </DialogContent>
       </Dialog>
+
+      {/* Image Viewer Modal */}
+      {selectedImage && (
+        <ImageViewer
+          isOpen={!!selectedImage}
+          onClose={closeImageViewer}
+          imageSrc={selectedImage.src}
+          imageAlt={selectedImage.alt}
+          title={selectedImage.title}
+          description={selectedImage.description}
+          category={selectedImage.category}
+        />
+      )}
     </div>
   );
 };
