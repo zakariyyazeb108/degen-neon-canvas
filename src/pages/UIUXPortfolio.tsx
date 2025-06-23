@@ -1,60 +1,105 @@
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { Card } from "@/components/ui/card";
-import { ArrowLeft, Upload, ExternalLink, Trash2 } from "lucide-react";
+import { ArrowLeft, Upload, ExternalLink, Trash2, Image as ImageIcon } from "lucide-react";
 import { Link } from "react-router-dom";
 import Navigation from "@/components/Navigation";
 import CustomCursor from "@/components/CustomCursor";
+import ImageViewer from "@/components/ImageViewer";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Textarea } from "@/components/ui/textarea";
 import { useSimpleDegenMode } from "@/hooks/useSimpleDegenMode";
+import { usePortfolioItems } from "@/hooks/usePortfolioItems";
 
 const UIUXPortfolio = () => {
-  const { isDegenMode, logUploadActivity } = useSimpleDegenMode();
-  const [editingCard, setEditingCard] = useState<number | null>(null);
+  const { isDegenMode } = useSimpleDegenMode();
+  const { items: uiuxProjects, loading, addItem, updateItem, deleteItem } = usePortfolioItems('uiux');
+  const [selectedImage, setSelectedImage] = useState<{
+    src: string;
+    alt: string;
+    title: string;
+    description: string;
+    category: string;
+  } | null>(null);
+  const [editingCard, setEditingCard] = useState<string | null>(null);
   const [newTitle, setNewTitle] = useState("");
   const [newDescription, setNewDescription] = useState("");
   const [newImage, setNewImage] = useState("");
   const [newWebsiteUrl, setNewWebsiteUrl] = useState("");
+  const [uploadingImage, setUploadingImage] = useState(false);
 
-  const [projects, setProjects] = useState([
-    {
-      id: 1,
-      title: "Coming Soon",
-      description: "UI/UX projects will be showcased here",
-      image: "",
-      websiteUrl: "",
-      category: "UI/UX"
+  const openImageViewer = (project: typeof uiuxProjects[0]) => {
+    if (isDegenMode) return; // Don't open viewer in degen mode
+    setSelectedImage({
+      src: project.image_url,
+      alt: project.title,
+      title: project.title,
+      description: project.description,
+      category: project.category
+    });
+  };
+
+  const closeImageViewer = () => {
+    setSelectedImage(null);
+  };
+
+  const handleFileUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (!file) return;
+
+    // Validate file type
+    if (!file.type.startsWith('image/')) {
+      alert('Please select an image file');
+      return;
     }
-  ]);
 
-  const startEditing = (project: typeof projects[0]) => {
+    // Increased file size limit to 10MB
+    if (file.size > 10 * 1024 * 1024) {
+      alert('File size must be less than 10MB');
+      return;
+    }
+
+    setUploadingImage(true);
+
+    try {
+      const imageUrl = URL.createObjectURL(file);
+      setNewImage(imageUrl);
+      console.log('Image uploaded successfully');
+    } catch (error) {
+      console.error('Error uploading image:', error);
+      alert('Failed to upload image. Please try again.');
+    } finally {
+      setUploadingImage(false);
+    }
+  };
+
+  const startEditing = (project: typeof uiuxProjects[0]) => {
     setEditingCard(project.id);
     setNewTitle(project.title);
     setNewDescription(project.description);
-    setNewImage(project.image);
-    setNewWebsiteUrl(project.websiteUrl);
+    setNewImage(project.image_url);
+    setNewWebsiteUrl(project.website_url || "");
   };
 
   const saveEdit = async () => {
-    const updatedProjects = projects.map(project => 
-      project.id === editingCard 
-        ? { ...project, title: newTitle, description: newDescription, image: newImage, websiteUrl: newWebsiteUrl }
-        : project
-    );
-    setProjects(updatedProjects);
-    
-    // Log the activity
-    await logUploadActivity('edit', 'uiux', editingCard!.toString(), {
+    if (!editingCard) return;
+
+    const success = await updateItem(editingCard, {
       title: newTitle,
       description: newDescription,
-      image: newImage,
-      websiteUrl: newWebsiteUrl
+      image_url: newImage,
+      website_url: newWebsiteUrl
     });
-    
-    setEditingCard(null);
+
+    if (success) {
+      setEditingCard(null);
+      setNewTitle("");
+      setNewDescription("");
+      setNewImage("");
+      setNewWebsiteUrl("");
+    }
   };
 
   const cancelEdit = () => {
@@ -66,33 +111,31 @@ const UIUXPortfolio = () => {
   };
 
   const addNewProject = async () => {
-    const newId = Math.max(...projects.map(p => p.id)) + 1;
-    const newProject = {
-      id: newId,
-      title: "New Project",
+    await addItem({
+      title: "New UI/UX Project",
       description: "Add your project description",
-      image: "",
-      websiteUrl: "",
-      category: "UI/UX"
-    };
-    
-    setProjects([...projects, newProject]);
-    
-    // Log the activity
-    await logUploadActivity('upload', 'uiux', newId.toString(), newProject);
+      image_url: "",
+      website_url: "",
+      category: "UI/UX",
+      item_type: "uiux"
+    });
   };
 
-  const deleteProject = async (projectId: number) => {
-    const projectToDelete = projects.find(p => p.id === projectId);
-    setProjects(projects.filter(project => project.id !== projectId));
-    
-    // Log the activity
-    if (projectToDelete) {
-      await logUploadActivity('delete', 'uiux', projectId.toString(), projectToDelete);
-    }
+  const deleteProject = async (projectId: string) => {
+    await deleteItem(projectId);
   };
 
-  const hasRealContent = projects.length > 1 || (projects.length === 1 && projects[0].title !== "Coming Soon");
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-background text-foreground flex items-center justify-center">
+        <CustomCursor />
+        <Navigation />
+        <div className="text-white">Loading...</div>
+      </div>
+    );
+  }
+
+  const hasRealContent = uiuxProjects.length > 0;
 
   return (
     <div className="min-h-screen bg-background text-foreground">
@@ -113,6 +156,15 @@ const UIUXPortfolio = () => {
             <p className="text-xl text-white/60 max-w-2xl font-light">
               User experiences that balance beautiful aesthetics with flawless functionality
             </p>
+
+            {/* Degen Mode Indicator */}
+            {isDegenMode && (
+              <div className="mt-4 p-3 bg-red-500/20 border border-red-500/30 rounded-lg">
+                <p className="text-red-400 text-sm">
+                  🔥 Degen Mode Active - All changes will be publicly visible
+                </p>
+              </div>
+            )}
           </div>
 
           {/* Add New Project Button (Degen Mode) */}
@@ -125,14 +177,15 @@ const UIUXPortfolio = () => {
             </div>
           )}
 
-          {/* Projects Grid */}
+          {/* Projects Grid or Empty State */}
           {hasRealContent ? (
             <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-              {projects.filter(project => project.title !== "Coming Soon").map((project, index) => (
+              {uiuxProjects.map((project, index) => (
                 <Card 
                   key={project.id} 
-                  className="premium-card group overflow-hidden relative"
+                  className={`premium-card group overflow-hidden ${!isDegenMode ? 'cursor-pointer' : ''} relative`}
                   style={{ animationDelay: `${index * 0.1}s` }}
+                  onClick={() => !isDegenMode && project.image_url && openImageViewer(project)}
                 >
                   {/* Delete Button (Degen Mode) */}
                   {isDegenMode && (
@@ -150,19 +203,29 @@ const UIUXPortfolio = () => {
 
                   <div className="relative">
                     {/* Project Image */}
-                    {project.image ? (
-                      <div className="aspect-video overflow-hidden">
+                    <div className="aspect-video overflow-hidden bg-gray-900/50">
+                      {project.image_url ? (
                         <img 
-                          src={project.image} 
+                          src={project.image_url} 
                           alt={project.title}
                           className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
                         />
-                      </div>
-                    ) : (
-                      <div className="aspect-video bg-gray-800 flex items-center justify-center">
-                        <span className="text-gray-400">No image</span>
-                      </div>
-                    )}
+                      ) : (
+                        <div className="w-full h-full bg-gray-800/50 flex items-center justify-center border-2 border-dashed border-gray-600">
+                          <div className="text-center">
+                            <ImageIcon className="w-12 h-12 text-gray-400 mx-auto mb-2" />
+                            <span className="text-gray-400 text-sm">No image uploaded</span>
+                          </div>
+                        </div>
+                      )}
+
+                      {/* Image Viewer Overlay (only when not in degen mode and has image) */}
+                      {!isDegenMode && project.image_url && (
+                        <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
+                          <ExternalLink className="w-8 h-8 text-white" />
+                        </div>
+                      )}
+                    </div>
 
                     {/* Degen Mode Edit Button */}
                     {isDegenMode && (
@@ -183,9 +246,9 @@ const UIUXPortfolio = () => {
                         <span className="text-xs font-medium text-primary/80 bg-primary/10 px-3 py-1 rounded-full">
                           {project.category}
                         </span>
-                        {project.websiteUrl && !isDegenMode && (
+                        {project.website_url && !isDegenMode && (
                           <a 
-                            href={project.websiteUrl} 
+                            href={project.website_url} 
                             target="_blank" 
                             rel="noopener noreferrer"
                             className="text-primary/60 hover:text-primary/80 transition-colors"
@@ -204,9 +267,9 @@ const UIUXPortfolio = () => {
                       </p>
 
                       {/* Website Link Display */}
-                      {project.websiteUrl && (
+                      {project.website_url && (
                         <a 
-                          href={project.websiteUrl} 
+                          href={project.website_url} 
                           target="_blank" 
                           rel="noopener noreferrer"
                           className="text-primary/80 hover:text-primary text-sm flex items-center gap-1 transition-colors"
@@ -242,39 +305,90 @@ const UIUXPortfolio = () => {
 
       {/* Edit Project Dialog */}
       <Dialog open={editingCard !== null} onOpenChange={() => cancelEdit()}>
-        <DialogContent className="bg-background border-white/10 max-w-2xl">
+        <DialogContent className="bg-background border-white/10 max-w-2xl max-h-[90vh] overflow-y-auto">
           <DialogHeader>
             <DialogTitle className="text-white">Edit UI/UX Project</DialogTitle>
           </DialogHeader>
-          <div className="space-y-4">
+          <div className="space-y-6">
+            {/* Image Upload Section */}
             <div>
-              <label className="text-white/80 text-sm mb-2 block">Project Title</label>
+              <label className="text-white/80 text-sm mb-3 block font-medium">Project Image</label>
+              
+              {/* Current Image Preview */}
+              {newImage && (
+                <div className="mb-4">
+                  <div className="aspect-video w-full max-w-md mx-auto rounded-lg overflow-hidden bg-gray-900">
+                    <img 
+                      src={newImage} 
+                      alt="Preview" 
+                      className="w-full h-full object-cover"
+                    />
+                  </div>
+                </div>
+              )}
+              
+              {/* Upload Options */}
+              <div className="space-y-3">
+                {/* File Upload */}
+                <div>
+                  <label className="block">
+                    <input
+                      type="file"
+                      accept="image/*"
+                      onChange={handleFileUpload}
+                      className="hidden"
+                    />
+                    <Button 
+                      type="button" 
+                      variant="outline" 
+                      className="w-full bg-gray-800/50 border-gray-600 hover:bg-gray-700/50"
+                      disabled={uploadingImage}
+                      onClick={() => (document.querySelector('input[type="file"]') as HTMLInputElement)?.click()}
+                    >
+                      <Upload className="w-4 h-4 mr-2" />
+                      {uploadingImage ? 'Uploading...' : 'Upload from PC'}
+                    </Button>
+                  </label>
+                </div>
+                
+                {/* URL Input */}
+                <div>
+                  <Input
+                    value={newImage}
+                    onChange={(e) => setNewImage(e.target.value)}
+                    className="bg-background/50 border-white/20 text-white"
+                    placeholder="Or paste image URL..."
+                  />
+                </div>
+              </div>
+            </div>
+
+            {/* Title Input */}
+            <div>
+              <label className="text-white/80 text-sm mb-2 block font-medium">Project Title</label>
               <Input
                 value={newTitle}
                 onChange={(e) => setNewTitle(e.target.value)}
                 className="bg-background/50 border-white/20 text-white"
+                placeholder="Enter project title..."
               />
             </div>
+
+            {/* Description Input */}
             <div>
-              <label className="text-white/80 text-sm mb-2 block">Description</label>
+              <label className="text-white/80 text-sm mb-2 block font-medium">Description</label>
               <Textarea
                 value={newDescription}
                 onChange={(e) => setNewDescription(e.target.value)}
-                className="bg-background/50 border-white/20 text-white"
+                className="bg-background/50 border-white/20 text-white resize-none"
+                placeholder="Enter project description..."
                 rows={3}
               />
             </div>
+
+            {/* Website URL Input */}
             <div>
-              <label className="text-white/80 text-sm mb-2 block">Image URL</label>
-              <Input
-                value={newImage}
-                onChange={(e) => setNewImage(e.target.value)}
-                className="bg-background/50 border-white/20 text-white"
-                placeholder="Enter image URL..."
-              />
-            </div>
-            <div>
-              <label className="text-white/80 text-sm mb-2 block">Website/Project URL</label>
+              <label className="text-white/80 text-sm mb-2 block font-medium">Website/Project URL</label>
               <Input
                 value={newWebsiteUrl}
                 onChange={(e) => setNewWebsiteUrl(e.target.value)}
@@ -282,17 +396,47 @@ const UIUXPortfolio = () => {
                 placeholder="https://example.com"
               />
             </div>
-            <div className="flex gap-2">
-              <Button onClick={saveEdit} className="flex-1 bg-red-500 hover:bg-red-600">
+
+            {/* Public Notice */}
+            <div className="p-3 bg-red-500/10 border border-red-500/20 rounded-lg">
+              <p className="text-red-400 text-xs">
+                ⚠️ This content will be publicly visible once saved
+              </p>
+            </div>
+
+            {/* Action Buttons */}
+            <div className="flex gap-3 pt-2">
+              <Button 
+                onClick={saveEdit} 
+                className="flex-1 bg-red-500 hover:bg-red-600"
+                disabled={!newTitle.trim()}
+              >
                 Save Changes
               </Button>
-              <Button onClick={cancelEdit} variant="outline" className="flex-1">
+              <Button 
+                onClick={cancelEdit} 
+                variant="outline" 
+                className="flex-1 border-gray-600 hover:bg-gray-700/50"
+              >
                 Cancel
               </Button>
             </div>
           </div>
         </DialogContent>
       </Dialog>
+
+      {/* Image Viewer Modal */}
+      {selectedImage && (
+        <ImageViewer
+          isOpen={!!selectedImage}
+          onClose={closeImageViewer}
+          imageSrc={selectedImage.src}
+          imageAlt={selectedImage.alt}
+          title={selectedImage.title}
+          description={selectedImage.description}
+          category={selectedImage.category}
+        />
+      )}
     </div>
   );
 };
