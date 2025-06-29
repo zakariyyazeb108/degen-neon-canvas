@@ -211,6 +211,10 @@ export type Database = {
         Args: { client_ip: string }
         Returns: undefined
       }
+      reset_rate_limit: {
+        Args: { client_ip: string }
+        Returns: undefined
+      }
       validate_degen_session: {
         Args: { session_token: string }
         Returns: {

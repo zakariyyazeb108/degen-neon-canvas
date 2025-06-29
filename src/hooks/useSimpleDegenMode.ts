@@ -192,9 +192,14 @@ export const useSimpleDegenMode = () => {
   // Add reset function for debugging/admin use
   const resetRateLimit = async () => {
     try {
-      await supabase.rpc('reset_rate_limit', {
+      // Use direct SQL function call without TypeScript validation
+      const { error } = await supabase.rpc('reset_rate_limit' as any, {
         client_ip: getClientIP()
       });
+      
+      if (error) {
+        throw error;
+      }
       
       toast({
         title: "Rate Limit Reset",
