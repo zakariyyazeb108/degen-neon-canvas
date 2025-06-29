@@ -56,30 +56,26 @@ const BannersPortfolio = () => {
       return;
     }
 
-    // Increased file size limit to 10MB
-    if (file.size > 10 * 1024 * 1024) {
-      alert('File size must be less than 10MB');
+    // Increased file size limit to 1GB (1024 * 1024 * 1024 bytes)
+    if (file.size > 1024 * 1024 * 1024) {
+      alert('File size must be less than 1GB');
       return;
     }
 
     setUploadingImage(true);
 
     try {
-      // Create a FormData object to send the file
-      const formData = new FormData();
-      formData.append('file', file);
-
-      // In a real app, you'd upload to your server/storage service
-      // For now, we'll create a local URL for demonstration
-      const imageUrl = URL.createObjectURL(file);
-      
-      // Update the current banner being edited
-      setNewImage(imageUrl);
-      
-      console.log('Image uploaded successfully');
+      // Convert file to base64 data URL for permanent storage
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        const dataUrl = e.target?.result as string;
+        setNewImage(dataUrl);
+        console.log('Image converted to data URL successfully');
+      };
+      reader.readAsDataURL(file);
     } catch (error) {
-      console.error('Error uploading image:', error);
-      alert('Failed to upload image. Please try again.');
+      console.error('Error processing image:', error);
+      alert('Failed to process image. Please try again.');
     } finally {
       setUploadingImage(false);
     }
@@ -139,7 +135,7 @@ const BannersPortfolio = () => {
       <div className="min-h-screen bg-background text-foreground flex items-center justify-center">
         <CustomCursor />
         <Navigation />
-        <div className="text-white">Loading...</div>
+        <div className="text-white white-mode:text-gray-800">Loading...</div>
       </div>
     );
   }
@@ -160,7 +156,7 @@ const BannersPortfolio = () => {
             <h1 className="text-4xl md:text-6xl font-light mb-6">
               <span className="gradient-text font-medium">Banner</span> Designs
             </h1>
-            <p className="text-xl text-white/60 max-w-2xl font-light">
+            <p className="text-xl text-white/60 white-mode:text-gray-600 max-w-2xl font-light">
               Eye-catching banner designs that drive engagement and conversions across web and social platforms
             </p>
             
@@ -209,7 +205,7 @@ const BannersPortfolio = () => {
 
                 <div className="relative">
                   {/* Banner Image with improved quality */}
-                  <div className="aspect-video overflow-hidden bg-gray-900/50">
+                  <div className="aspect-video overflow-hidden bg-gray-900/50 white-mode:bg-gray-100">
                     {banner.image_url ? (
                       <img 
                         src={banner.image_url} 
@@ -222,24 +218,24 @@ const BannersPortfolio = () => {
                         loading="lazy"
                       />
                     ) : (
-                      <div className="w-full h-full bg-gray-800/50 flex items-center justify-center border-2 border-dashed border-gray-600">
+                      <div className="w-full h-full bg-gray-800/50 white-mode:bg-gray-200 flex items-center justify-center border-2 border-dashed border-gray-600 white-mode:border-gray-400">
                         <div className="text-center">
-                          <ImageIcon className="w-12 h-12 text-gray-400 mx-auto mb-2" />
-                          <span className="text-gray-400 text-sm">No image uploaded</span>
+                          <ImageIcon className="w-12 h-12 text-gray-400 white-mode:text-gray-500 mx-auto mb-2" />
+                          <span className="text-gray-400 white-mode:text-gray-500 text-sm">No image uploaded</span>
                         </div>
                       </div>
                     )}
                     
                     {/* Overlay */}
                     {!isDegenMode && banner.image_url && (
-                      <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
-                        <ExternalLink className="w-8 h-8 text-white" />
+                      <div className="absolute inset-0 bg-black/40 white-mode:bg-white/40 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
+                        <ExternalLink className="w-8 h-8 text-white white-mode:text-gray-800" />
                       </div>
                     )}
 
                     {/* Degen Mode Edit Button */}
                     {isDegenMode && (
-                      <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
+                      <div className="absolute inset-0 bg-black/60 white-mode:bg-white/60 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
                         <Button
                           onClick={() => startEditing(banner)}
                           className="bg-red-500 hover:bg-red-600"
@@ -259,11 +255,11 @@ const BannersPortfolio = () => {
                       </span>
                     </div>
                     
-                    <h3 className="text-xl font-medium text-white mb-2 group-hover:text-primary/90 transition-colors">
+                    <h3 className="text-xl font-medium text-white white-mode:text-gray-800 mb-2 group-hover:text-primary/90 transition-colors">
                       {banner.title}
                     </h3>
                     
-                    <p className="text-white/60 text-sm leading-relaxed">
+                    <p className="text-white/60 white-mode:text-gray-600 text-sm leading-relaxed">
                       {banner.description}
                     </p>
                   </div>
@@ -277,19 +273,19 @@ const BannersPortfolio = () => {
             <div className="grid grid-cols-2 md:grid-cols-4 gap-8 max-w-3xl mx-auto">
               <div>
                 <div className="text-3xl font-bold gradient-text mb-2">{banners.length}+</div>
-                <div className="text-white/60 text-sm">Banner Designs</div>
+                <div className="text-white/60 white-mode:text-gray-600 text-sm">Banner Designs</div>
               </div>
               <div>
                 <div className="text-3xl font-bold gradient-text mb-2">15+</div>
-                <div className="text-white/60 text-sm">Happy Clients</div>
+                <div className="text-white/60 white-mode:text-gray-600 text-sm">Happy Clients</div>
               </div>
               <div>
                 <div className="text-3xl font-bold gradient-text mb-2">100%</div>
-                <div className="text-white/60 text-sm">Satisfaction Rate</div>
+                <div className="text-white/60 white-mode:text-gray-600 text-sm">Satisfaction Rate</div>
               </div>
               <div>
                 <div className="text-3xl font-bold gradient-text mb-2">24h</div>
-                <div className="text-white/60 text-sm">Avg. Delivery</div>
+                <div className="text-white/60 white-mode:text-gray-600 text-sm">Avg. Delivery</div>
               </div>
             </div>
           </div>
@@ -298,19 +294,19 @@ const BannersPortfolio = () => {
 
       {/* Enhanced Edit Card Dialog */}
       <Dialog open={editingCard !== null} onOpenChange={() => cancelEdit()}>
-        <DialogContent className="bg-background border-white/10 max-w-2xl max-h-[90vh] overflow-y-auto">
+        <DialogContent className="bg-background white-mode:bg-white border-white/10 white-mode:border-gray-200 max-w-2xl max-h-[90vh] overflow-y-auto">
           <DialogHeader>
-            <DialogTitle className="text-white">Edit Banner Content</DialogTitle>
+            <DialogTitle className="text-white white-mode:text-gray-800">Edit Banner Content</DialogTitle>
           </DialogHeader>
           <div className="space-y-6">
             {/* Image Upload Section */}
             <div>
-              <label className="text-white/80 text-sm mb-3 block font-medium">Banner Image</label>
+              <label className="text-white/80 white-mode:text-gray-700 text-sm mb-3 block font-medium">Banner Image</label>
               
               {/* Current Image Preview */}
               {newImage && (
                 <div className="mb-4">
-                  <div className="aspect-video w-full max-w-md mx-auto rounded-lg overflow-hidden bg-gray-900">
+                  <div className="aspect-video w-full max-w-md mx-auto rounded-lg overflow-hidden bg-gray-900 white-mode:bg-gray-100">
                     <img 
                       src={newImage} 
                       alt="Preview" 
@@ -324,7 +320,7 @@ const BannersPortfolio = () => {
                 </div>
               )}
               
-              {/* Upload Options */}
+              {/* Upload Options - Only file upload in degen mode */}
               <div className="space-y-3">
                 {/* File Upload */}
                 <div>
@@ -338,46 +334,36 @@ const BannersPortfolio = () => {
                     <Button 
                       type="button" 
                       variant="outline" 
-                      className="w-full bg-gray-800/50 border-gray-600 hover:bg-gray-700/50"
+                      className="w-full bg-gray-800/50 white-mode:bg-gray-100 border-gray-600 white-mode:border-gray-300 hover:bg-gray-700/50 white-mode:hover:bg-gray-200"
                       disabled={uploadingImage}
                       onClick={() => (document.querySelector('input[type="file"]') as HTMLInputElement)?.click()}
                     >
                       <Upload className="w-4 h-4 mr-2" />
-                      {uploadingImage ? 'Uploading...' : 'Upload from PC'}
+                      {uploadingImage ? 'Processing...' : 'Upload from PC (Max 1GB)'}
                     </Button>
                   </label>
-                </div>
-                
-                {/* URL Input */}
-                <div>
-                  <Input
-                    value={newImage}
-                    onChange={(e) => setNewImage(e.target.value)}
-                    className="bg-background/50 border-white/20 text-white"
-                    placeholder="Or paste image URL..."
-                  />
                 </div>
               </div>
             </div>
 
             {/* Title Input */}
             <div>
-              <label className="text-white/80 text-sm mb-2 block font-medium">Title</label>
+              <label className="text-white/80 white-mode:text-gray-700 text-sm mb-2 block font-medium">Title</label>
               <Input
                 value={newTitle}
                 onChange={(e) => setNewTitle(e.target.value)}
-                className="bg-background/50 border-white/20 text-white"
+                className="bg-background/50 white-mode:bg-gray-50 border-white/20 white-mode:border-gray-300 text-white white-mode:text-gray-800"
                 placeholder="Enter banner title..."
               />
             </div>
 
             {/* Description Input */}
             <div>
-              <label className="text-white/80 text-sm mb-2 block font-medium">Description</label>
+              <label className="text-white/80 white-mode:text-gray-700 text-sm mb-2 block font-medium">Description</label>
               <Textarea
                 value={newDescription}
                 onChange={(e) => setNewDescription(e.target.value)}
-                className="bg-background/50 border-white/20 text-white resize-none"
+                className="bg-background/50 white-mode:bg-gray-50 border-white/20 white-mode:border-gray-300 text-white white-mode:text-gray-800 resize-none"
                 placeholder="Enter banner description..."
                 rows={3}
               />
@@ -385,11 +371,11 @@ const BannersPortfolio = () => {
 
             {/* Category Input */}
             <div>
-              <label className="text-white/80 text-sm mb-2 block font-medium">Category</label>
+              <label className="text-white/80 white-mode:text-gray-700 text-sm mb-2 block font-medium">Category</label>
               <Input
                 value={newCategory}
                 onChange={(e) => setNewCategory(e.target.value)}
-                className="bg-background/50 border-white/20 text-white"
+                className="bg-background/50 white-mode:bg-gray-50 border-white/20 white-mode:border-gray-300 text-white white-mode:text-gray-800"
                 placeholder="Enter category..."
               />
             </div>
@@ -413,7 +399,7 @@ const BannersPortfolio = () => {
               <Button 
                 onClick={cancelEdit} 
                 variant="outline" 
-                className="flex-1 border-gray-600 hover:bg-gray-700/50"
+                className="flex-1 border-gray-600 white-mode:border-gray-300 hover:bg-gray-700/50 white-mode:hover:bg-gray-100"
               >
                 Cancel
               </Button>

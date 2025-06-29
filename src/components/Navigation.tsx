@@ -25,7 +25,7 @@ const Navigation = () => {
 
   return (
     <nav className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${
-      isScrolled ? 'bg-black/80 backdrop-blur-xl border-b border-white/10' : 'bg-transparent'
+      isScrolled ? 'bg-black/80 white-mode:bg-white/90 backdrop-blur-xl border-b border-white/10 white-mode:border-gray-200' : 'bg-transparent'
     }`}>
       <div className="container mx-auto px-6">
         <div className="flex items-center justify-between h-20">
@@ -40,7 +40,7 @@ const Navigation = () => {
               <a
                 key={item.name}
                 href={item.href}
-                className="text-white/70 hover:text-white transition-colors duration-300 font-medium"
+                className="text-white/70 white-mode:text-gray-600 hover:text-white white-mode:hover:text-gray-900 transition-colors duration-300 font-medium"
               >
                 {item.name}
               </a>
@@ -50,7 +50,7 @@ const Navigation = () => {
           {/* Mobile Menu Button */}
           <button
             onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-            className="md:hidden text-white p-2"
+            className="md:hidden text-white white-mode:text-gray-800 p-2"
           >
             {isMobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
           </button>
@@ -58,14 +58,14 @@ const Navigation = () => {
 
         {/* Mobile Menu */}
         {isMobileMenuOpen && (
-          <div className="md:hidden absolute top-full left-0 right-0 bg-black/95 backdrop-blur-xl border-b border-white/10">
+          <div className="md:hidden absolute top-full left-0 right-0 bg-black/95 white-mode:bg-white/95 backdrop-blur-xl border-b border-white/10 white-mode:border-gray-200">
             <div className="px-6 py-8 space-y-6">
               {navItems.map((item) => (
                 <a
                   key={item.name}
                   href={item.href}
                   onClick={() => setIsMobileMenuOpen(false)}
-                  className="block text-white/70 hover:text-white transition-colors duration-300 font-medium text-lg"
+                  className="block text-white/70 white-mode:text-gray-600 hover:text-white white-mode:hover:text-gray-900 transition-colors duration-300 font-medium text-lg"
                 >
                   {item.name}
                 </a>

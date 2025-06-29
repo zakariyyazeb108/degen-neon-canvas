@@ -1,4 +1,3 @@
-
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -35,6 +34,37 @@
 
     --radius: 0.5rem;
   }
+
+  /* White Mode Variables */
+  .white-mode {
+    --background: 0 0% 98%;
+    --foreground: 0 0% 8%;
+
+    --card: 0 0% 100%;
+    --card-foreground: 0 0% 8%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 0 0% 8%;
+
+    --primary: 220 100% 50%;
+    --primary-foreground: 0 0% 98%;
+
+    --secondary: 0 0% 96%;
+    --secondary-foreground: 0 0% 8%;
+
+    --muted: 0 0% 96%;
+    --muted-foreground: 0 0% 40%;
+
+    --accent: 220 100% 50%;
+    --accent-foreground: 0 0% 98%;
+
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 0 0% 98%;
+
+    --border: 0 0% 88%;
+    --input: 0 0% 94%;
+    --ring: 220 100% 50%;
+  }
 }
 
 @layer base {
@@ -67,10 +97,20 @@
   will-change: transform;
 }
 
+.white-mode .cursor-main {
+  background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+  mix-blend-mode: multiply;
+}
+
 /* Premium gradient backgrounds */
 .premium-gradient {
   background: radial-gradient(ellipse at top, rgba(59, 130, 246, 0.08) 0%, transparent 50%),
               radial-gradient(ellipse at bottom, rgba(96, 165, 250, 0.05) 0%, transparent 50%);
+}
+
+.white-mode .premium-gradient {
+  background: radial-gradient(ellipse at top, rgba(59, 130, 246, 0.06) 0%, transparent 50%),
+              radial-gradient(ellipse at bottom, rgba(96, 165, 250, 0.04) 0%, transparent 50%);
 }
 
 .hero-gradient {
@@ -78,6 +118,13 @@
     radial-gradient(circle at 20% 80%, rgba(59, 130, 246, 0.1) 0%, transparent 50%),
     radial-gradient(circle at 80% 20%, rgba(96, 165, 250, 0.08) 0%, transparent 50%),
     radial-gradient(circle at 40% 40%, rgba(147, 197, 253, 0.05) 0%, transparent 50%);
+}
+
+.white-mode .hero-gradient {
+  background: 
+    radial-gradient(circle at 20% 80%, rgba(59, 130, 246, 0.08) 0%, transparent 50%),
+    radial-gradient(circle at 80% 20%, rgba(96, 165, 250, 0.06) 0%, transparent 50%),
+    radial-gradient(circle at 40% 40%, rgba(147, 197, 253, 0.04) 0%, transparent 50%);
 }
 
 /* Premium glow effects */
@@ -95,9 +142,30 @@
     inset 0 1px 0 rgba(255, 255, 255, 0.15);
 }
 
+.white-mode .premium-glow {
+  box-shadow: 
+    0 0 30px rgba(59, 130, 246, 0.1),
+    0 0 60px rgba(59, 130, 246, 0.05),
+    inset 0 1px 0 rgba(255, 255, 255, 0.8);
+}
+
+.white-mode .premium-glow:hover {
+  box-shadow: 
+    0 0 40px rgba(59, 130, 246, 0.15),
+    0 0 80px rgba(59, 130, 246, 0.1),
+    inset 0 1px 0 rgba(255, 255, 255, 0.9);
+}
+
 /* Enhanced text animations */
 .gradient-text {
   background: linear-gradient(135deg, #60a5fa 0%, #93c5fd 50%, #dbeafe 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.white-mode .gradient-text {
+  background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 50%, #1e40af 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
@@ -263,6 +331,13 @@
   overflow: hidden;
 }
 
+.white-mode .premium-card {
+  background: rgba(255, 255, 255, 0.8);
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba(0, 0, 0, 0.06);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.04);
+}
+
 .premium-card::before {
   content: '';
   position: absolute;
@@ -279,6 +354,15 @@
   transition: left 0.8s cubic-bezier(0.23, 1, 0.32, 1);
 }
 
+.white-mode .premium-card::before {
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(59, 130, 246, 0.03),
+    transparent
+  );
+}
+
 .premium-card:hover::before {
   left: 100%;
 }
@@ -291,6 +375,14 @@
     0 0 80px rgba(59, 130, 246, 0.1);
 }
 
+.white-mode .premium-card:hover {
+  transform: translateY(-8px);
+  border-color: rgba(59, 130, 246, 0.15);
+  box-shadow: 
+    0 20px 40px rgba(0, 0, 0, 0.08),
+    0 0 80px rgba(59, 130, 246, 0.06);
+}
+
 /* Advanced button effects */
 .premium-button {
   position: relative;
@@ -299,6 +391,11 @@
   backdrop-filter: blur(10px);
   transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
   overflow: hidden;
+}
+
+.white-mode .premium-button {
+  background: linear-gradient(135deg, rgba(59, 130, 246, 0.9), rgba(29, 78, 216, 0.8));
+  border: 1px solid rgba(59, 130, 246, 0.3);
 }
 
 .premium-button::before {
@@ -322,6 +419,12 @@
     0 10px 30px rgba(59, 130, 246, 0.3),
     0 0 60px rgba(59, 130, 246, 0.2);
   border-color: rgba(96, 165, 250, 0.5);
+}
+
+.white-mode .premium-button:hover {
+  box-shadow: 
+    0 10px 30px rgba(59, 130, 246, 0.2),
+    0 0 60px rgba(59, 130, 246, 0.1);
 }
 
 /* Geometric decorations */
