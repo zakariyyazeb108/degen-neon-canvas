@@ -54,18 +54,23 @@ const GraphicsPortfolio = () => {
       return;
     }
 
-    // Increased file size limit to 10MB
-    if (file.size > 10 * 1024 * 1024) {
-      alert('File size must be less than 10MB');
+    // Increased file size limit to 1GB (1024MB)
+    if (file.size > 1024 * 1024 * 1024) {
+      alert('File size must be less than 1GB');
       return;
     }
 
     setUploadingImage(true);
 
     try {
-      const imageUrl = URL.createObjectURL(file);
-      setNewImage(imageUrl);
-      console.log('Image uploaded successfully');
+      // For degen mode, we want to store the image as a data URL to ensure it persists
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        const dataUrl = e.target?.result as string;
+        setNewImage(dataUrl);
+        console.log('Image uploaded successfully and will persist');
+      };
+      reader.readAsDataURL(file);
     } catch (error) {
       console.error('Error uploading image:', error);
       alert('Failed to upload image. Please try again.');
@@ -322,20 +327,22 @@ const GraphicsPortfolio = () => {
                       onClick={() => (document.querySelector('input[type="file"]') as HTMLInputElement)?.click()}
                     >
                       <Upload className="w-4 h-4 mr-2" />
-                      {uploadingImage ? 'Uploading...' : 'Upload from PC'}
+                      {uploadingImage ? 'Uploading...' : 'Upload from PC (Max 1GB)'}
                     </Button>
                   </label>
                 </div>
                 
-                {/* URL Input */}
-                <div>
-                  <Input
-                    value={newImage}
-                    onChange={(e) => setNewImage(e.target.value)}
-                    className="bg-background/50 border-white/20 text-white"
-                    placeholder="Or paste image URL..."
-                  />
-                </div>
+                {/* URL Input - Only show if not in degen mode */}
+                {!isDegenMode && (
+                  <div>
+                    <Input
+                      value={newImage}
+                      onChange={(e) => setNewImage(e.target.value)}
+                      className="bg-background/50 border-white/20 text-white"
+                      placeholder="Or paste image URL..."
+                    />
+                  </div>
+                )}
               </div>
             </div>
 
