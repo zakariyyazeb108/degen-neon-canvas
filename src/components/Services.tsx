@@ -34,10 +34,10 @@ const Services = () => {
     <section id="services" className="py-32 premium-gradient relative">
       <div className="container mx-auto px-6">
         <div className="text-center mb-24">
-          <h2 className="text-5xl md:text-6xl font-light mb-8 text-balance">
+          <h2 className="text-5xl md:text-6xl font-light mb-8 text-balance text-white white-mode:text-gray-900">
             What I <span className="gradient-text font-medium">Create</span>
           </h2>
-          <p className="text-xl text-white/50 max-w-2xl mx-auto font-light">
+          <p className="text-xl text-white/50 white-mode:text-gray-600 max-w-2xl mx-auto font-light">
             Specialized services designed to elevate your brand and digital presence
           </p>
         </div>
@@ -54,10 +54,10 @@ const Services = () => {
                   
                   {/* Content */}
                   <div className="space-y-4">
-                    <h3 className="text-2xl font-medium text-white group-hover:text-blue-300 transition-colors duration-500">
+                    <h3 className="text-2xl font-medium text-white white-mode:text-gray-800 group-hover:text-blue-300 white-mode:group-hover:text-blue-600 transition-colors duration-500">
                       {service.title}
                     </h3>
-                    <p className="text-white/60 leading-relaxed font-light text-sm">
+                    <p className="text-white/60 white-mode:text-gray-600 leading-relaxed font-light text-sm">
                       {service.description}
                     </p>
                   </div>
@@ -65,8 +65,8 @@ const Services = () => {
                   {/* Features */}
                   <ul className="space-y-2">
                     {service.features.map((feature, idx) => (
-                      <li key={idx} className="text-white/40 text-sm font-light flex items-center">
-                        <div className="w-1 h-1 bg-blue-400/50 rounded-full mr-3"></div>
+                      <li key={idx} className="text-white/40 white-mode:text-gray-500 text-sm font-light flex items-center">
+                        <div className="w-1 h-1 bg-blue-400/50 white-mode:bg-blue-500/50 rounded-full mr-3"></div>
                         {feature}
                       </li>
                     ))}
