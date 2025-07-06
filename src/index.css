@@ -35,35 +35,35 @@
     --radius: 0.5rem;
   }
 
-  /* White Mode Variables */
+  /* Beautiful White Mode Variables - Inspired by clean, minimalist design */
   .white-mode {
-    --background: 0 0% 98%;
-    --foreground: 0 0% 8%;
+    --background: 0 0% 99%;
+    --foreground: 0 0% 9%;
 
     --card: 0 0% 100%;
-    --card-foreground: 0 0% 8%;
+    --card-foreground: 0 0% 9%;
 
     --popover: 0 0% 100%;
-    --popover-foreground: 0 0% 8%;
+    --popover-foreground: 0 0% 9%;
 
-    --primary: 220 100% 50%;
-    --primary-foreground: 0 0% 98%;
+    --primary: 220 100% 55%;
+    --primary-foreground: 0 0% 100%;
 
-    --secondary: 0 0% 96%;
-    --secondary-foreground: 0 0% 8%;
+    --secondary: 0 0% 97%;
+    --secondary-foreground: 0 0% 12%;
 
     --muted: 0 0% 96%;
-    --muted-foreground: 0 0% 40%;
+    --muted-foreground: 0 0% 45%;
 
-    --accent: 220 100% 50%;
-    --accent-foreground: 0 0% 98%;
+    --accent: 220 100% 55%;
+    --accent-foreground: 0 0% 100%;
 
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 0 0% 98%;
 
-    --border: 0 0% 88%;
-    --input: 0 0% 94%;
-    --ring: 220 100% 50%;
+    --border: 0 0% 92%;
+    --input: 0 0% 96%;
+    --ring: 220 100% 55%;
   }
 }
 
@@ -120,11 +120,24 @@
     radial-gradient(circle at 40% 40%, rgba(147, 197, 253, 0.05) 0%, transparent 50%);
 }
 
+/* Beautiful White Mode Enhancements */
 .white-mode .hero-gradient {
   background: 
-    radial-gradient(circle at 20% 80%, rgba(59, 130, 246, 0.08) 0%, transparent 50%),
-    radial-gradient(circle at 80% 20%, rgba(96, 165, 250, 0.06) 0%, transparent 50%),
-    radial-gradient(circle at 40% 40%, rgba(147, 197, 253, 0.04) 0%, transparent 50%);
+    radial-gradient(circle at 20% 80%, rgba(59, 130, 246, 0.04) 0%, transparent 50%),
+    radial-gradient(circle at 80% 20%, rgba(96, 165, 250, 0.03) 0%, transparent 50%),
+    radial-gradient(circle at 40% 40%, rgba(147, 197, 253, 0.02) 0%, transparent 50%);
+}
+
+/* White mode specific enhancements */
+.white-mode body {
+  background-color: hsl(var(--background));
+}
+
+.white-mode .geometric-bg {
+  opacity: 0.01;
+  background-image: 
+    linear-gradient(90deg, rgba(59, 130, 246, 0.05) 1px, transparent 1px),
+    linear-gradient(rgba(59, 130, 246, 0.05) 1px, transparent 1px);
 }
 
 /* Premium glow effects */
@@ -332,10 +345,10 @@
 }
 
 .white-mode .premium-card {
-  background: rgba(255, 255, 255, 0.8);
+  background: rgba(255, 255, 255, 0.95);
   backdrop-filter: blur(20px);
-  border: 1px solid rgba(0, 0, 0, 0.06);
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.04);
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06), 0 1px 3px rgba(0, 0, 0, 0.08);
 }
 
 .premium-card::before {
@@ -377,10 +390,11 @@
 
 .white-mode .premium-card:hover {
   transform: translateY(-8px);
-  border-color: rgba(59, 130, 246, 0.15);
+  border-color: rgba(59, 130, 246, 0.2);
   box-shadow: 
-    0 20px 40px rgba(0, 0, 0, 0.08),
-    0 0 80px rgba(59, 130, 246, 0.06);
+    0 20px 40px rgba(0, 0, 0, 0.12),
+    0 8px 32px rgba(59, 130, 246, 0.15),
+    0 0 0 1px rgba(59, 130, 246, 0.05);
 }
 
 /* Advanced button effects */

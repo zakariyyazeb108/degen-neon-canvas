@@ -13,7 +13,7 @@ import BannersPortfolio from "./pages/BannersPortfolio";
 import UIUXPortfolio from "./pages/UIUXPortfolio";
 import PNLPortfolio from "./pages/PNLPortfolio";
 import GraphicsPortfolio from "./pages/GraphicsPortfolio";
-import ThemeToggle from "./components/ThemeToggle";
+import SettingsMenu from "./components/SettingsMenu";
 
 const queryClient = new QueryClient();
 
@@ -24,7 +24,7 @@ const App = () => (
         <TooltipProvider>
           <Toaster />
           <Sonner />
-          <ThemeToggle />
+          <SettingsMenu />
           <BrowserRouter>
             <Routes>
               <Route path="/" element={<Index />} />
