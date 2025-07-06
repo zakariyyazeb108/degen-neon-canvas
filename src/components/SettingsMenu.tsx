@@ -1,3 +1,4 @@
+
 import { useState } from 'react';
 import { Cog, Sun, Moon, Settings, Zap } from 'lucide-react';
 import { useTheme } from '@/contexts/ThemeContext';
@@ -38,7 +39,8 @@ const SettingsMenu = () => {
 
   return (
     <>
-      <div className="fixed top-6 right-6 z-50">
+      {/* Fixed positioning to bottom left */}
+      <div className="fixed bottom-6 left-6 z-50">
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button
@@ -52,7 +54,8 @@ const SettingsMenu = () => {
           </DropdownMenuTrigger>
           
           <DropdownMenuContent
-            align="end"
+            align="start"
+            side="top"
             className="w-64 bg-black/90 white-mode:bg-white border-white/10 white-mode:border-gray-200 backdrop-blur-xl"
           >
             {/* Theme Toggle */}
