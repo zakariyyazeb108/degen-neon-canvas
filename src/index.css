@@ -36,35 +36,35 @@
     --radius: 0.5rem;
   }
 
-  /* Refined Light Mode - Harmonious color palette */
+  /* Updated Light Mode with your specified hex colors */
   .white-mode {
-    --background: 210 40% 98%;
-    --foreground: 210 24% 16%;
+    --background: 249 250 251; /* #F9FAFB - soft white */
+    --foreground: 15 23 42; /* #0F172A - very dark navy */
 
-    --card: 0 0% 100%;
-    --card-foreground: 210 24% 16%;
+    --card: 255 255 255; /* #FFFFFF - pure white */
+    --card-foreground: 15 23 42; /* #0F172A - very dark navy */
 
-    --popover: 0 0% 100%;
-    --popover-foreground: 210 24% 16%;
+    --popover: 255 255 255; /* #FFFFFF - pure white */
+    --popover-foreground: 15 23 42; /* #0F172A - very dark navy */
 
-    --primary: 210 100% 56%;
-    --primary-foreground: 0 0% 100%;
+    --primary: 59 130 246; /* #3B82F6 - primary accent light blue */
+    --primary-foreground: 255 255 255; /* white text on primary */
 
-    --secondary: 210 40% 94%;
-    --secondary-foreground: 210 24% 24%;
+    --secondary: 241 245 249; /* #F1F5F9 - light grey-blue */
+    --secondary-foreground: 71 85 105; /* #475569 - muted blue-grey */
 
-    --muted: 210 40% 96%;
-    --muted-foreground: 210 16% 46%;
+    --muted: 241 245 249; /* #F1F5F9 - light grey-blue */
+    --muted-foreground: 148 163 184; /* #94A3B8 - light steel blue */
 
-    --accent: 210 100% 56%;
-    --accent-foreground: 0 0% 100%;
+    --accent: 59 130 246; /* #3B82F6 - primary accent light blue */
+    --accent-foreground: 255 255 255; /* white text on accent */
 
-    --destructive: 0 84% 60%;
-    --destructive-foreground: 0 0% 98%;
+    --destructive: 239 68 68; /* #EF4444 - error red */
+    --destructive-foreground: 255 255 255; /* white text on destructive */
 
-    --border: 210 40% 86%;
-    --input: 210 40% 96%;
-    --ring: 210 100% 56%;
+    --border: 226 232 240; /* #E2E8F0 - subtle border */
+    --input: 241 245 249; /* #F1F5F9 - light grey-blue for inputs */
+    --ring: 59 130 246; /* #3B82F6 - primary accent for focus rings */
   }
 }
 
@@ -99,7 +99,7 @@
 }
 
 .white-mode .cursor-main {
-  background: linear-gradient(135deg, #0ea5e9, #0284c7);
+  background: linear-gradient(135deg, #3B82F6, #2563EB);
   mix-blend-mode: normal;
 }
 
@@ -110,8 +110,8 @@
 }
 
 .white-mode .premium-gradient {
-  background: radial-gradient(ellipse at top, rgba(14, 165, 233, 0.06) 0%, transparent 50%),
-              radial-gradient(ellipse at bottom, rgba(56, 189, 248, 0.04) 0%, transparent 50%);
+  background: radial-gradient(ellipse at top, rgba(59, 130, 246, 0.06) 0%, transparent 50%),
+              radial-gradient(ellipse at bottom, rgba(37, 99, 235, 0.04) 0%, transparent 50%);
 }
 
 .hero-gradient {
@@ -123,22 +123,22 @@
 
 .white-mode .hero-gradient {
   background: 
-    radial-gradient(circle at 20% 80%, rgba(14, 165, 233, 0.04) 0%, transparent 50%),
-    radial-gradient(circle at 80% 20%, rgba(56, 189, 248, 0.03) 0%, transparent 50%),
-    radial-gradient(circle at 40% 40%, rgba(125, 211, 252, 0.02) 0%, transparent 50%);
+    radial-gradient(circle at 20% 80%, rgba(59, 130, 246, 0.04) 0%, transparent 50%),
+    radial-gradient(circle at 80% 20%, rgba(37, 99, 235, 0.03) 0%, transparent 50%),
+    radial-gradient(circle at 40% 40%, rgba(59, 130, 246, 0.02) 0%, transparent 50%);
 }
 
 /* White mode specific enhancements */
 .white-mode body {
-  background-color: hsl(var(--background));
-  color: hsl(var(--foreground));
+  background-color: #F9FAFB; /* Using your specified soft white */
+  color: #0F172A; /* Using your specified very dark navy */
 }
 
 .white-mode .geometric-bg {
   opacity: 0.008;
   background-image: 
-    linear-gradient(90deg, rgba(14, 165, 233, 0.03) 1px, transparent 1px),
-    linear-gradient(rgba(14, 165, 233, 0.03) 1px, transparent 1px);
+    linear-gradient(90deg, rgba(59, 130, 246, 0.03) 1px, transparent 1px),
+    linear-gradient(rgba(59, 130, 246, 0.03) 1px, transparent 1px);
 }
 
 /* Premium glow effects */
@@ -158,15 +158,15 @@
 
 .white-mode .premium-glow {
   box-shadow: 
-    0 2px 16px rgba(14, 165, 233, 0.08),
-    0 1px 4px rgba(14, 165, 233, 0.06),
+    0 2px 16px rgba(0, 0, 0, 0.04), /* Using your soft shadow */
+    0 1px 4px rgba(0, 0, 0, 0.04),
     inset 0 1px 0 rgba(255, 255, 255, 0.9);
 }
 
 .white-mode .premium-glow:hover {
   box-shadow: 
-    0 4px 24px rgba(14, 165, 233, 0.12),
-    0 2px 8px rgba(14, 165, 233, 0.08),
+    0 4px 24px rgba(0, 0, 0, 0.1), /* Using your elevated shadow */
+    0 2px 8px rgba(0, 0, 0, 0.04),
     inset 0 1px 0 rgba(255, 255, 255, 1);
 }
 
@@ -179,7 +179,7 @@
 }
 
 .white-mode .gradient-text {
-  background: linear-gradient(135deg, #0ea5e9 0%, #0284c7 50%, #0369a1 100%);
+  background: linear-gradient(135deg, #3B82F6 0%, #2563EB 50%, #1D4ED8 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
@@ -204,11 +204,11 @@
 .white-mode .gradient-text-animated {
   background: linear-gradient(
     135deg, 
-    #0ea5e9 0%, 
-    #0284c7 25%, 
-    #0369a1 50%, 
-    #0284c7 75%, 
-    #0ea5e9 100%
+    #3B82F6 0%, 
+    #2563EB 25%, 
+    #1D4ED8 50%, 
+    #2563EB 75%, 
+    #3B82F6 100%
   );
   background-size: 200% 200%;
   -webkit-background-clip: text;
@@ -361,10 +361,10 @@
 }
 
 .white-mode .premium-card {
-  background: rgba(255, 255, 255, 0.95);
+  background: #FFFFFF; /* Using your specified pure white */
   backdrop-filter: blur(20px);
-  border: 1px solid hsl(210 40% 86%);
-  box-shadow: 0 1px 3px rgba(14, 165, 233, 0.06), 0 1px 2px rgba(14, 165, 233, 0.04);
+  border: 1px solid #E2E8F0; /* Using your specified subtle border */
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04), 0 1px 2px rgba(0, 0, 0, 0.04); /* Using your soft shadow */
 }
 
 .premium-card::before {
@@ -387,7 +387,7 @@
   background: linear-gradient(
     90deg,
     transparent,
-    rgba(14, 165, 233, 0.02),
+    rgba(59, 130, 246, 0.02),
     transparent
   );
 }
@@ -406,11 +406,11 @@
 
 .white-mode .premium-card:hover {
   transform: translateY(-8px);
-  border-color: hsl(210 100% 56% / 0.3);
+  border-color: #CBD5E1; /* Using your specified strong border */
   box-shadow: 
-    0 8px 32px rgba(14, 165, 233, 0.12),
-    0 2px 16px rgba(14, 165, 233, 0.08),
-    0 0 0 1px hsl(210 100% 56% / 0.05);
+    0 8px 32px rgba(0, 0, 0, 0.1), /* Using your elevated shadow */
+    0 2px 16px rgba(0, 0, 0, 0.04),
+    0 0 0 1px rgba(59, 130, 246, 0.05);
 }
 
 /* Advanced button effects */
@@ -424,8 +424,8 @@
 }
 
 .white-mode .premium-button {
-  background: linear-gradient(135deg, hsl(210 100% 56%), hsl(210 100% 52%));
-  border: 1px solid hsl(210 100% 56% / 0.3);
+  background: linear-gradient(135deg, #3B82F6, #2563EB); /* Using your specified colors */
+  border: 1px solid rgba(59, 130, 246, 0.3);
   color: white;
 }
 
@@ -454,9 +454,9 @@
 
 .white-mode .premium-button:hover {
   box-shadow: 
-    0 6px 20px rgba(14, 165, 233, 0.2),
-    0 2px 8px rgba(14, 165, 233, 0.1);
-  border-color: hsl(210 100% 56% / 0.5);
+    0 6px 20px rgba(59, 130, 246, 0.2),
+    0 2px 8px rgba(59, 130, 246, 0.1);
+  border-color: rgba(37, 99, 235, 0.5); /* Using your hover accent */
 }
 
 /* Geometric decorations */
@@ -487,7 +487,7 @@
 }
 
 .white-mode .scroll-indicator {
-  border-color: hsl(210 100% 56% / 0.3);
+  border-color: rgba(59, 130, 246, 0.3);
 }
 
 .scroll-indicator::before {
@@ -504,7 +504,7 @@
 }
 
 .white-mode .scroll-indicator::before {
-  background: linear-gradient(to bottom, hsl(210 100% 56%), transparent);
+  background: linear-gradient(to bottom, #3B82F6, transparent);
 }
 
 @keyframes scrollDot {
@@ -522,37 +522,37 @@ h1, h2, h3 {
   text-wrap: balance;
 }
 
-/* White mode text color fixes */
+/* White mode text color fixes using your specified colors */
 .white-mode h1,
 .white-mode h2,
 .white-mode h3,
 .white-mode h4,
 .white-mode h5,
 .white-mode h6 {
-  color: hsl(210 24% 16%);
+  color: #0F172A; /* Using your specified very dark navy */
 }
 
 .white-mode p {
-  color: hsl(210 16% 36%);
+  color: #475569; /* Using your specified muted blue-grey */
 }
 
-/* White mode specific utility classes */
+/* White mode specific utility classes using your color palette */
 .white-mode .text-white {
-  color: hsl(210 24% 16%) !important;
+  color: #0F172A !important; /* Using your specified very dark navy */
 }
 
 .white-mode .text-white\/60 {
-  color: hsl(210 16% 46%) !important;
+  color: #475569 !important; /* Using your specified muted blue-grey */
 }
 
 .white-mode .text-white\/80 {
-  color: hsl(210 16% 26%) !important;
+  color: #334155 !important; /* Slightly darker version for better contrast */
 }
 
 .white-mode .text-white\/90 {
-  color: hsl(210 24% 20%) !important;
+  color: #1E293B !important; /* Even darker for high emphasis */
 }
 
 .white-mode .text-white\/50 {
-  color: hsl(210 16% 50%) !important;
+  color: #94A3B8 !important; /* Using your specified light steel blue */
 }
