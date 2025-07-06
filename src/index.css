@@ -36,35 +36,35 @@
     --radius: 0.5rem;
   }
 
-  /* Updated Light Mode with your specified hex colors */
+  /* Light Mode with your exact hex colors converted to HSL */
   .white-mode {
-    --background: 249 250 251; /* #F9FAFB - soft white */
-    --foreground: 15 23 42; /* #0F172A - very dark navy */
+    --background: 210 20% 98%; /* #F9FAFB */
+    --foreground: 222 84% 5%; /* #0F172A */
 
-    --card: 255 255 255; /* #FFFFFF - pure white */
-    --card-foreground: 15 23 42; /* #0F172A - very dark navy */
+    --card: 0 0% 100%; /* #FFFFFF */
+    --card-foreground: 222 84% 5%; /* #0F172A */
 
-    --popover: 255 255 255; /* #FFFFFF - pure white */
-    --popover-foreground: 15 23 42; /* #0F172A - very dark navy */
+    --popover: 0 0% 100%; /* #FFFFFF */
+    --popover-foreground: 222 84% 5%; /* #0F172A */
 
-    --primary: 59 130 246; /* #3B82F6 - primary accent light blue */
-    --primary-foreground: 255 255 255; /* white text on primary */
+    --primary: 59 130 246; /* Keep blue accent */
+    --primary-foreground: 0 0% 100%; /* White text on primary */
 
-    --secondary: 241 245 249; /* #F1F5F9 - light grey-blue */
-    --secondary-foreground: 71 85 105; /* #475569 - muted blue-grey */
+    --secondary: 210 40% 96%; /* Light grey-blue */
+    --secondary-foreground: 215 25% 27%; /* Muted blue-grey */
 
-    --muted: 241 245 249; /* #F1F5F9 - light grey-blue */
-    --muted-foreground: 148 163 184; /* #94A3B8 - light steel blue */
+    --muted: 210 40% 96%; /* Light grey-blue */
+    --muted-foreground: 215 16% 47%; /* Light steel blue */
 
-    --accent: 59 130 246; /* #3B82F6 - primary accent light blue */
-    --accent-foreground: 255 255 255; /* white text on accent */
+    --accent: 59 130 246; /* Blue accent */
+    --accent-foreground: 0 0% 100%; /* White text on accent */
 
-    --destructive: 239 68 68; /* #EF4444 - error red */
-    --destructive-foreground: 255 255 255; /* white text on destructive */
+    --destructive: 0 84% 60%; /* Error red */
+    --destructive-foreground: 0 0% 100%; /* White text on destructive */
 
-    --border: 226 232 240; /* #E2E8F0 - subtle border */
-    --input: 241 245 249; /* #F1F5F9 - light grey-blue for inputs */
-    --ring: 59 130 246; /* #3B82F6 - primary accent for focus rings */
+    --border: 220 13% 91%; /* Subtle border */
+    --input: 210 40% 96%; /* Light grey-blue for inputs */
+    --ring: 59 130 246; /* Blue for focus rings */
   }
 }
 
@@ -128,10 +128,10 @@
     radial-gradient(circle at 40% 40%, rgba(59, 130, 246, 0.02) 0%, transparent 50%);
 }
 
-/* White mode specific enhancements */
+/* Force correct colors in white mode */
 .white-mode body {
-  background-color: #F9FAFB; /* Using your specified soft white */
-  color: #0F172A; /* Using your specified very dark navy */
+  background-color: #F9FAFB !important;
+  color: #0F172A !important;
 }
 
 .white-mode .geometric-bg {
@@ -158,14 +158,14 @@
 
 .white-mode .premium-glow {
   box-shadow: 
-    0 2px 16px rgba(0, 0, 0, 0.04), /* Using your soft shadow */
+    0 2px 16px rgba(0, 0, 0, 0.04),
     0 1px 4px rgba(0, 0, 0, 0.04),
     inset 0 1px 0 rgba(255, 255, 255, 0.9);
 }
 
 .white-mode .premium-glow:hover {
   box-shadow: 
-    0 4px 24px rgba(0, 0, 0, 0.1), /* Using your elevated shadow */
+    0 4px 24px rgba(0, 0, 0, 0.1),
     0 2px 8px rgba(0, 0, 0, 0.04),
     inset 0 1px 0 rgba(255, 255, 255, 1);
 }
@@ -361,10 +361,10 @@
 }
 
 .white-mode .premium-card {
-  background: #FFFFFF; /* Using your specified pure white */
+  background: #FFFFFF !important;
   backdrop-filter: blur(20px);
-  border: 1px solid #E2E8F0; /* Using your specified subtle border */
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04), 0 1px 2px rgba(0, 0, 0, 0.04); /* Using your soft shadow */
+  border: 1px solid #E2E8F0;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04), 0 1px 2px rgba(0, 0, 0, 0.04);
 }
 
 .premium-card::before {
@@ -406,9 +406,9 @@
 
 .white-mode .premium-card:hover {
   transform: translateY(-8px);
-  border-color: #CBD5E1; /* Using your specified strong border */
+  border-color: #CBD5E1;
   box-shadow: 
-    0 8px 32px rgba(0, 0, 0, 0.1), /* Using your elevated shadow */
+    0 8px 32px rgba(0, 0, 0, 0.1),
     0 2px 16px rgba(0, 0, 0, 0.04),
     0 0 0 1px rgba(59, 130, 246, 0.05);
 }
@@ -424,7 +424,7 @@
 }
 
 .white-mode .premium-button {
-  background: linear-gradient(135deg, #3B82F6, #2563EB); /* Using your specified colors */
+  background: linear-gradient(135deg, #3B82F6, #2563EB);
   border: 1px solid rgba(59, 130, 246, 0.3);
   color: white;
 }
@@ -456,7 +456,7 @@
   box-shadow: 
     0 6px 20px rgba(59, 130, 246, 0.2),
     0 2px 8px rgba(59, 130, 246, 0.1);
-  border-color: rgba(37, 99, 235, 0.5); /* Using your hover accent */
+  border-color: rgba(37, 99, 235, 0.5);
 }
 
 /* Geometric decorations */
@@ -522,37 +522,37 @@ h1, h2, h3 {
   text-wrap: balance;
 }
 
-/* White mode text color fixes using your specified colors */
+/* White mode text color overrides */
 .white-mode h1,
 .white-mode h2,
 .white-mode h3,
 .white-mode h4,
 .white-mode h5,
 .white-mode h6 {
-  color: #0F172A; /* Using your specified very dark navy */
+  color: #0F172A !important;
 }
 
 .white-mode p {
-  color: #475569; /* Using your specified muted blue-grey */
+  color: #475569 !important;
 }
 
-/* White mode specific utility classes using your color palette */
+/* White mode utility class overrides */
 .white-mode .text-white {
-  color: #0F172A !important; /* Using your specified very dark navy */
+  color: #0F172A !important;
 }
 
 .white-mode .text-white\/60 {
-  color: #475569 !important; /* Using your specified muted blue-grey */
+  color: #475569 !important;
 }
 
 .white-mode .text-white\/80 {
-  color: #334155 !important; /* Slightly darker version for better contrast */
+  color: #334155 !important;
 }
 
 .white-mode .text-white\/90 {
-  color: #1E293B !important; /* Even darker for high emphasis */
+  color: #1E293B !important;
 }
 
 .white-mode .text-white\/50 {
-  color: #94A3B8 !important; /* Using your specified light steel blue */
+  color: #94A3B8 !important;
 }
