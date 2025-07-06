@@ -65,7 +65,7 @@ const Services = () => {
                   {/* Features */}
                   <ul className="space-y-2">
                     {service.features.map((feature, idx) => (
-                      <li key={idx} className="text-white/40 white-mode:text-gray-500 text-sm font-light flex items-center">
+                      <li key={idx} className="text-white/40 white-mode:text-gray-600 text-sm font-light flex items-center">
                         <div className="w-1 h-1 bg-blue-400/50 white-mode:bg-blue-500/50 rounded-full mr-3"></div>
                         {feature}
                       </li>
