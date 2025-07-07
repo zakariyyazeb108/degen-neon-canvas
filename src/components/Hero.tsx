@@ -1,5 +1,6 @@
 
 import MagneticButton from "./MagneticButton";
+import FloatingElements from "./FloatingElements";
 
 const Hero = () => {
   const handleDiscordClick = () => {
@@ -8,6 +9,8 @@ const Hero = () => {
 
   return (
     <section id="home" className="min-h-screen flex items-center justify-center relative overflow-hidden hero-gradient">
+      <FloatingElements />
+      
       {/* Geometric background */}
       <div className="geometric-bg"></div>
       

@@ -3,6 +3,7 @@ import { Card } from "@/components/ui/card";
 import { ArrowLeft, Upload, ExternalLink, Trash2, Image as ImageIcon } from "lucide-react";
 import { Link } from "react-router-dom";
 import Navigation from "@/components/Navigation";
+import CustomCursor from "@/components/CustomCursor";
 import ImageViewer from "@/components/ImageViewer";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -125,6 +126,7 @@ const UIUXPortfolio = () => {
   if (loading) {
     return (
       <div className="min-h-screen bg-background text-foreground flex items-center justify-center">
+        <CustomCursor />
         <Navigation />
         <div className="text-white white-mode:text-gray-800">Loading...</div>
       </div>
@@ -135,6 +137,7 @@ const UIUXPortfolio = () => {
 
   return (
     <div className="min-h-screen bg-background text-foreground">
+      <CustomCursor />
       <Navigation />
       
       <div className="pt-32 pb-16">
