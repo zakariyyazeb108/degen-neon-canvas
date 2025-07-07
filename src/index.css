@@ -1,4 +1,3 @@
-
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -36,7 +35,7 @@
     --radius: 0.5rem;
   }
 
-  /* Light Mode with your exact hex colors converted to HSL */
+  /* Light Mode with proper HSL color values */
   .white-mode {
     --background: 210 20% 98%; /* #F9FAFB */
     --foreground: 222 84% 5%; /* #0F172A */
@@ -47,7 +46,7 @@
     --popover: 0 0% 100%; /* #FFFFFF */
     --popover-foreground: 222 84% 5%; /* #0F172A */
 
-    --primary: 59 130 246; /* Keep blue accent */
+    --primary: 214 100% 59%; /* Blue accent in HSL */
     --primary-foreground: 0 0% 100%; /* White text on primary */
 
     --secondary: 210 40% 96%; /* Light grey-blue */
@@ -56,7 +55,7 @@
     --muted: 210 40% 96%; /* Light grey-blue */
     --muted-foreground: 215 16% 47%; /* Light steel blue */
 
-    --accent: 59 130 246; /* Blue accent */
+    --accent: 214 100% 59%; /* Blue accent */
     --accent-foreground: 0 0% 100%; /* White text on accent */
 
     --destructive: 0 84% 60%; /* Error red */
@@ -64,7 +63,7 @@
 
     --border: 220 13% 91%; /* Subtle border */
     --input: 210 40% 96%; /* Light grey-blue for inputs */
-    --ring: 59 130 246; /* Blue for focus rings */
+    --ring: 214 100% 59%; /* Blue for focus rings */
   }
 }
 
@@ -237,7 +236,6 @@
   transform: translateX(100%);
 }
 
-/* ... keep existing code (all keyframes animations) */
 @keyframes fadeInUp {
   from {
     opacity: 0;
@@ -522,7 +520,7 @@ h1, h2, h3 {
   text-wrap: balance;
 }
 
-/* White mode text color overrides */
+/* White mode text color overrides - COMPREHENSIVE FIX */
 .white-mode h1,
 .white-mode h2,
 .white-mode h3,
@@ -536,7 +534,7 @@ h1, h2, h3 {
   color: #475569 !important;
 }
 
-/* White mode utility class overrides */
+/* Comprehensive white mode utility class overrides */
 .white-mode .text-white {
   color: #0F172A !important;
 }
@@ -555,4 +553,142 @@ h1, h2, h3 {
 
 .white-mode .text-white\/50 {
   color: #94A3B8 !important;
+}
+
+/* FIX FOR BULLET POINTS - Critical addition */
+.white-mode .text-white\/40 {
+  color: #64748B !important;
+}
+
+.white-mode .text-white\/70 {
+  color: #475569 !important;
+}
+
+/* Additional contrast fixes for light mode */
+.white-mode .text-gray-600 {
+  color: #475569 !important;
+}
+
+.white-mode .text-gray-700 {
+  color: #374151 !important;
+}
+
+.white-mode .text-gray-800 {
+  color: #1F2937 !important;
+}
+
+.white-mode .text-gray-900 {
+  color: #111827 !important;
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(60px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(100%);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes shine {
+  0% {
+    transform: translateX(-100%) skewX(-12deg);
+  }
+  100% {
+    transform: translateX(200%) skewX(-12deg);
+  }
+}
+
+@keyframes gradientShift {
+  0%, 100% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+}
+
+@keyframes pulseGlow {
+  0%, 100% {
+    opacity: 0.3;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.6;
+    transform: scale(1.05);
+  }
+}
+
+.animate-fade-in-up {
+  animation: fadeInUp 1s ease-out forwards;
+}
+
+.animate-slide-up {
+  animation: slideUp 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+}
+
+.animate-fade-in {
+  animation: fadeIn 1s ease-out forwards;
+}
+
+.animate-shine {
+  animation: shine 1.5s ease-out;
+}
+
+.animate-pulse-slow {
+  animation: pulseGlow 3s ease-in-out infinite;
+}
+
+.animate-float {
+  animation: floatSlow 8s ease-in-out infinite;
+}
+
+/* Floating elements */
+.float-slow {
+  animation: floatSlow 8s ease-in-out infinite;
+}
+
+.float-medium {
+  animation: floatMedium 6s ease-in-out infinite;
+}
+
+.float-fast {
+  animation: floatFast 4s ease-in-out infinite;
+}
+
+@keyframes floatSlow {
+  0%, 100% { transform: translateY(0px) rotate(0deg); }
+  50% { transform: translateY(-30px) rotate(5deg); }
+}
+
+@keyframes floatMedium {
+  0%, 100% { transform: translateY(0px) rotate(0deg); }
+  50% { transform: translateY(-20px) rotate(-3deg); }
+}
+
+@keyframes floatFast {
+  0%, 100% { transform: translateY(0px) rotate(0deg); }
+  50% { transform: translateY(-15px) rotate(2deg); }
 }
