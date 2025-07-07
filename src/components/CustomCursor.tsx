@@ -1,37 +1,45 @@
 
-import { useEffect, useState, useCallback } from 'react';
+import { useState, useEffect } from 'react';
 
 const CustomCursor = () => {
   const [position, setPosition] = useState({ x: 0, y: 0 });
   const [isVisible, setIsVisible] = useState(false);
 
-  const updateCursor = useCallback((e: MouseEvent) => {
-    setPosition({ x: e.clientX, y: e.clientY });
-    if (!isVisible) setIsVisible(true);
-  }, [isVisible]);
-
   useEffect(() => {
     let animationId: number;
-
-    const handleMouseMove = (e: MouseEvent) => {
+    
+    const updatePosition = (e: MouseEvent) => {
+      // Use requestAnimationFrame for smoother updates
       cancelAnimationFrame(animationId);
-      animationId = requestAnimationFrame(() => updateCursor(e));
+      animationId = requestAnimationFrame(() => {
+        setPosition({ x: e.clientX, y: e.clientY });
+      });
     };
 
-    const handleMouseLeave = () => setIsVisible(false);
     const handleMouseEnter = () => setIsVisible(true);
+    const handleMouseLeave = () => setIsVisible(false);
 
-    document.addEventListener('mousemove', handleMouseMove);
-    document.addEventListener('mouseleave', handleMouseLeave);
+    // Throttle mouse events for better performance
+    let lastUpdate = 0;
+    const throttledUpdate = (e: MouseEvent) => {
+      const now = Date.now();
+      if (now - lastUpdate > 16) { // ~60fps
+        updatePosition(e);
+        lastUpdate = now;
+      }
+    };
+
+    document.addEventListener('mousemove', throttledUpdate);
     document.addEventListener('mouseenter', handleMouseEnter);
+    document.addEventListener('mouseleave', handleMouseLeave);
 
     return () => {
-      document.removeEventListener('mousemove', handleMouseMove);
-      document.removeEventListener('mouseleave', handleMouseLeave);
-      document.removeEventListener('mouseenter', handleMouseEnter);
       cancelAnimationFrame(animationId);
+      document.removeEventListener('mousemove', throttledUpdate);
+      document.removeEventListener('mouseenter', handleMouseEnter);
+      document.removeEventListener('mouseleave', handleMouseLeave);
     };
-  }, [updateCursor]);
+  }, []);
 
   if (!isVisible) return null;
 
@@ -39,8 +47,9 @@ const CustomCursor = () => {
     <div
       className="cursor-main"
       style={{
-        left: position.x - 6,
-        top: position.y - 6,
+        left: `${position.x}px`,
+        top: `${position.y}px`,
+        transform: 'translate(-50%, -50%)',
       }}
     />
   );

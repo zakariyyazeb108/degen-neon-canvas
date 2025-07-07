@@ -10,9 +10,9 @@ import ParticleBackground from "@/components/ParticleBackground";
 import CustomCursor from "@/components/CustomCursor";
 
 const Index = () => {
-
   return (
     <div className="min-h-screen bg-background text-foreground overflow-x-hidden relative">
+      {/* Only load heavy components when needed */}
       <ParticleBackground />
       <CustomCursor />
 

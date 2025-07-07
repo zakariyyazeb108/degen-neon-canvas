@@ -78,8 +78,8 @@ const Portfolio = () => {
 
   return (
     <section id="portfolio" className="py-32 bg-background relative overflow-hidden">
-      {/* Use the same gradient pattern as the rest of the site */}
-      <div className="hero-gradient absolute inset-0"></div>
+      {/* Simplified gradient background */}
+      <div className="absolute inset-0 bg-gradient-to-b from-transparent via-primary/5 to-transparent"></div>
 
       <div className="container mx-auto px-6 relative z-10">
         <div className="text-center mb-24">
@@ -97,14 +97,13 @@ const Portfolio = () => {
               key={category.id} 
               to={category.path} 
               className="block group"
-              style={{ animationDelay: `${index * 0.1}s` }}
             >
-              <Card className="premium-card p-8 h-full">
+              <Card className="premium-card p-8 h-full transition-transform duration-300 hover:scale-105">
                 <div className="space-y-6 h-full flex flex-col">
                   
                   {/* Header section */}
                   <div className="flex items-start justify-between">
-                    <div className="p-4 rounded-2xl bg-primary/10 backdrop-blur-sm border border-primary/20 transition-all duration-300 group-hover:bg-primary/20 group-hover:border-primary/40">
+                    <div className="p-4 rounded-2xl bg-primary/10 backdrop-blur-sm border border-primary/20 transition-colors duration-300 group-hover:bg-primary/20">
                       <category.icon className="w-10 h-10 text-primary/80 group-hover:text-primary transition-colors duration-300" />
                     </div>
                     
