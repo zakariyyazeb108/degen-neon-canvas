@@ -1,6 +1,6 @@
 
 import MagneticButton from "./MagneticButton";
-import FloatingElements from "./FloatingElements";
+import LightweightFloatingElements from "./LightweightFloatingElements";
 
 const Hero = () => {
   const handleDiscordClick = () => {
@@ -9,14 +9,14 @@ const Hero = () => {
 
   return (
     <section id="home" className="min-h-screen flex items-center justify-center relative overflow-hidden hero-gradient">
-      <FloatingElements />
+      <LightweightFloatingElements />
       
-      {/* Geometric background */}
-      <div className="geometric-bg"></div>
+      {/* Simplified geometric background */}
+      <div className="geometric-bg opacity-30"></div>
       
       <div className="container mx-auto px-6 text-center relative z-10">
         <div className="max-w-5xl mx-auto space-y-12 pt-32">
-          {/* Main heading with enhanced animations */}
+          {/* Main heading with optimized animations */}
           <div className="relative">
             <h1 className="text-6xl md:text-8xl font-light leading-tight mb-6 text-balance">
               <span className="block text-white/90 animate-fade-in-up [animation-delay:0.2s] [animation-fill-mode:forwards] opacity-0 -mb-6">
@@ -29,9 +29,9 @@ const Hero = () => {
               </span>
             </h1>
             
-            {/* Decorative elements */}
-            <div className="absolute -top-8 -right-8 w-32 h-32 bg-gradient-to-br from-blue-400/10 to-blue-600/5 rounded-full blur-3xl animate-pulse-slow animate-fade-in [animation-delay:1.2s] [animation-fill-mode:forwards] opacity-0"></div>
-            <div className="absolute -bottom-8 -left-8 w-24 h-24 bg-gradient-to-br from-blue-500/15 to-blue-300/5 rounded-full blur-2xl animate-float animate-fade-in [animation-delay:1.4s] [animation-fill-mode:forwards] opacity-0"></div>
+            {/* Simplified decorative elements */}
+            <div className="absolute -top-8 -right-8 w-24 h-24 bg-gradient-to-br from-blue-400/8 to-blue-600/4 rounded-full blur-2xl animate-pulse animate-fade-in [animation-delay:1.2s] [animation-fill-mode:forwards] opacity-0"></div>
+            <div className="absolute -bottom-8 -left-8 w-16 h-16 bg-gradient-to-br from-blue-500/10 to-blue-300/4 rounded-full blur-xl animate-pulse animate-fade-in [animation-delay:1.4s] [animation-fill-mode:forwards] opacity-0"></div>
           </div>
           
           {/* Subtitle with elegant spacing and animations */}
