@@ -12,9 +12,13 @@ import CustomCursor from "@/components/CustomCursor";
 const Index = () => {
   return (
     <div className="min-h-screen bg-background text-foreground overflow-x-hidden relative">
-      {/* Only load heavy components when needed */}
-      <ParticleBackground />
-      <CustomCursor />
+      {/* Conditionally load heavy components only on larger screens */}
+      {window.innerWidth > 768 && (
+        <>
+          <ParticleBackground />
+          <CustomCursor />
+        </>
+      )}
 
       <Navigation />
       <Hero />

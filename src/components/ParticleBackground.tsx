@@ -11,7 +11,7 @@ const ParticleBackground = () => {
     const ctx = canvas.getContext('2d');
     if (!ctx) return;
 
-    // Reduced particle count for better performance
+    // Drastically reduced particle count for better performance
     const particles: Array<{
       x: number;
       y: number;
@@ -27,23 +27,31 @@ const ParticleBackground = () => {
 
     const createParticles = () => {
       particles.length = 0;
-      // Reduced from potential 100+ to max 30 particles
-      const particleCount = Math.min(30, Math.floor((canvas.width * canvas.height) / 20000));
+      // Reduced to max 10 particles for much better performance
+      const particleCount = Math.min(10, Math.floor((canvas.width * canvas.height) / 50000));
       
       for (let i = 0; i < particleCount; i++) {
         particles.push({
           x: Math.random() * canvas.width,
           y: Math.random() * canvas.height,
-          vx: (Math.random() - 0.5) * 0.5, // Reduced speed
-          vy: (Math.random() - 0.5) * 0.5,
-          alpha: Math.random() * 0.3 + 0.1
+          vx: (Math.random() - 0.5) * 0.2, // Much slower movement
+          vy: (Math.random() - 0.5) * 0.2,
+          alpha: Math.random() * 0.2 + 0.05 // More subtle
         });
       }
     };
 
     let animationId: number;
+    let lastTime = 0;
 
-    const animate = () => {
+    const animate = (currentTime: number) => {
+      // Limit to 30fps for better performance
+      if (currentTime - lastTime < 33) {
+        animationId = requestAnimationFrame(animate);
+        return;
+      }
+      lastTime = currentTime;
+
       ctx.clearRect(0, 0, canvas.width, canvas.height);
 
       particles.forEach((particle) => {
@@ -54,9 +62,9 @@ const ParticleBackground = () => {
         if (particle.x < 0 || particle.x > canvas.width) particle.vx *= -1;
         if (particle.y < 0 || particle.y > canvas.height) particle.vy *= -1;
 
-        // Draw particle
+        // Draw particle with reduced size
         ctx.beginPath();
-        ctx.arc(particle.x, particle.y, 1, 0, Math.PI * 2);
+        ctx.arc(particle.x, particle.y, 0.5, 0, Math.PI * 2);
         ctx.fillStyle = `rgba(96, 165, 250, ${particle.alpha})`;
         ctx.fill();
       });
@@ -66,7 +74,7 @@ const ParticleBackground = () => {
 
     resizeCanvas();
     createParticles();
-    animate();
+    animate(0);
 
     const handleResize = () => {
       resizeCanvas();
@@ -84,7 +92,7 @@ const ParticleBackground = () => {
   return (
     <canvas
       ref={canvasRef}
-      className="fixed inset-0 pointer-events-none opacity-20 white-mode:opacity-5"
+      className="fixed inset-0 pointer-events-none opacity-10 white-mode:opacity-3"
       style={{ zIndex: 1 }}
     />
   );

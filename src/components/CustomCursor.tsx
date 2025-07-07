@@ -19,17 +19,17 @@ const CustomCursor = () => {
     const handleMouseEnter = () => setIsVisible(true);
     const handleMouseLeave = () => setIsVisible(false);
 
-    // Throttle mouse events for better performance
+    // More aggressive throttling - ~30fps instead of 60fps
     let lastUpdate = 0;
     const throttledUpdate = (e: MouseEvent) => {
       const now = Date.now();
-      if (now - lastUpdate > 16) { // ~60fps
+      if (now - lastUpdate > 33) { // ~30fps
         updatePosition(e);
         lastUpdate = now;
       }
     };
 
-    document.addEventListener('mousemove', throttledUpdate);
+    document.addEventListener('mousemove', throttledUpdate, { passive: true });
     document.addEventListener('mouseenter', handleMouseEnter);
     document.addEventListener('mouseleave', handleMouseLeave);
 
@@ -50,6 +50,7 @@ const CustomCursor = () => {
         left: `${position.x}px`,
         top: `${position.y}px`,
         transform: 'translate(-50%, -50%)',
+        willChange: 'transform',
       }}
     />
   );
