@@ -10,7 +10,6 @@ import { useAuth } from '@/hooks/useAuth';
 import { useToast } from '@/hooks/use-toast';
 import { Eye, EyeOff, ArrowLeft } from 'lucide-react';
 import { Link } from 'react-router-dom';
-import CustomCursor from '@/components/CustomCursor';
 
 const Auth = () => {
   const { signIn, signUp } = useAuth();
@@ -69,8 +68,6 @@ const Auth = () => {
 
   return (
     <div className="min-h-screen bg-background text-foreground flex items-center justify-center p-6">
-      <CustomCursor />
-      
       <div className="w-full max-w-md">
         <div className="mb-6">
           <Link to="/" className="inline-flex items-center text-primary hover:text-primary/80 transition-colors">
